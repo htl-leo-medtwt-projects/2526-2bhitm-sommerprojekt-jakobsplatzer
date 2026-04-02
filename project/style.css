@@ -11,6 +11,7 @@
     color: #B41A34;
     font-size: 1.5rem;
     -webkit-text-stroke: 2px #F9E9D1;
+    text-align: center;
 }
 
 #start-section{
@@ -23,10 +24,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
-#cloud-text-container{
-
+#start-text-container{
+    height: 480px;
 }
 
 #cloud-img{
@@ -39,4 +41,15 @@
     top: -330px;
     position: relative;
     text-align: center;
+}
+
+#start-button1{
+    width: 137px;
+    height: 66px;
+    background-color: white;
+    border-radius: 20px;
+}
+
+#start-button1:hover{
+    transform: scale(1.1);
 }
