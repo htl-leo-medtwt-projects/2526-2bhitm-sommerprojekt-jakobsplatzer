@@ -1,6 +1,14 @@
 *{
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
-#start-section{}
+#start-section{
+    height: 100%;
+    width: 100%;
+    background: url(img/start-screen.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
