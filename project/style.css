@@ -1,14 +1,42 @@
+@font-face {
+    font-family: Rametto;
+    src: url(font/RammettoOne-Regular.ttf);
+}
+
 *{
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: Rametto;
+    color: #B41A34;
+    font-size: 1.5rem;
+    -webkit-text-stroke: 2px #F9E9D1;
 }
 
 #start-section{
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     background: url(img/start-screen.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cloud-text-container{
+
+}
+
+#cloud-img{
+    position: relative;
+    width: 530px;
+    height: 530px;
+}
+
+#start-text{
+    top: -330px;
+    position: relative;
+    text-align: center;
 }
