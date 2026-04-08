@@ -1,9 +1,9 @@
 let startSection = document.getElementById('start-section');
 let videoSection = document.getElementById('video-section');
-let conWithChick = document.getElementById('con-with-chick');
+let conWithChick1 = document.getElementById('con-with-chick1');
 
 videoSection.style.display = 'none';
-conWithChick.style.display = 'none';
+conWithChick1.style.display = 'none';
 
 
 
@@ -13,7 +13,6 @@ function startToVid(){
 }
 
 function vidToCon(){
-    startSection.style.display = 'none';
     videoSection.style.display = 'none';
-    conWithChick.style.display = '';
+    conWithChick1.style.display = '';
 }
