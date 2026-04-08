@@ -36,5 +36,3 @@ function Con3ToCon4(){
     conWithChick3.style.display = 'none';
     conWithChick4.style.display = '';
 }
-
-
