@@ -53,3 +53,11 @@
 #start-button1:hover{
     transform: scale(1.1);
 }
+
+#con-with-chick{
+    background: url(img/with-chicken.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+}

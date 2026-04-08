@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sommerprojekt</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div id="start-section">
@@ -13,9 +14,17 @@
             <p id="start-text">Wolly's way <br> Home</p>
         </div>
 
-        <div id="start-button1">
+        <div id="start-button1" onclick="startToVid()">
             <p>Play</p>
         </div>
+    </div>
+
+    <div id="video-section" >
+        <video src="vid/Lamb-Intro.mp4" controls></video>
+        <div id="next-btn" onclick="vidToCon()">Next</div>
+    </div>
+    <div id="con-with-chick">
+
     </div>
 </body>
 </html>
