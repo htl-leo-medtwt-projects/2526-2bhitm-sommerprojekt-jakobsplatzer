@@ -15,17 +15,27 @@ conWithChick3.style.display = 'none';
 conWithChick4.style.display = 'none';
 game1.style.display = 'none';
 
-
+function backToHome(){
+    startSection.style.display = '';
+    homeButton.style.display = 'none';
+    videoSection.style.display = 'none';
+    conWithChick1.style.display = 'none';
+    conWithChick2.style.display = 'none';
+    conWithChick3.style.display = 'none';
+    conWithChick4.style.display = 'none';
+    game1.style.display = 'none';
+}
 
 function startToVid(){
     startSection.style.display = 'none';
     videoSection.style.display = '';
-    homeButton.style.display = '';
 }
 
 function vidToCon(){
     videoSection.style.display = 'none';
     conWithChick1.style.display = '';
+    homeButton.style.display = '';
+
 }
 
 function Con1ToCon2(){
