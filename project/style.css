@@ -20,6 +20,29 @@ h2{
     margin-top: 1rem;
 }
 
+#home-buttton{
+    position: absolute;
+    left: 5rem;
+    top: -3.5rem;
+    border-radius: 100%;
+    background-color: rgb(48, 31, 23);
+    border: 3px solid beige;
+    width: 6rem;
+    height: 6rem;
+    cursor: pointer;
+    transition: all 1s ease;
+}
+
+#home-icon{
+    margin-top: 50%;
+    width: 30%;
+    height: 50%;
+}
+
+#home-buttton:hover{
+    top: -3rem;
+}
+
 #start-section{
     height: 100vh;
     width: 100vw;
@@ -105,7 +128,9 @@ h2{
     height: 80%;
 }
 
-.speeking-bubble-lamb{
+.speeking-bubble{
+        z-index: 100000;
+
     position: absolute;
     left: 45%;
     top: 18%;
@@ -115,7 +140,7 @@ h2{
     border-radius: 20px;
 }
 
-.speeking-bubble-lamb p{
+.speeking-bubble p{
     font-size: 0.6rem;
     -webkit-text-stroke: 0.5px #F9E9D1;
 }
@@ -135,4 +160,13 @@ h2{
     margin-top: 8rem;
     margin-left: -0.6rem;
     transform: rotateY(180deg);
+    z-index: 1;
+}
+
+#game-screen1{
+    height: 100vh;
+    width: 100vw;
+    background-image: url(img/wooden-barn.png);
+    background-size: cover;
+    background-position: center;
 }
