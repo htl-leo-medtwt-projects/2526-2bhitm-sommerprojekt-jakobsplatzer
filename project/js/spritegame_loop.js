@@ -49,9 +49,7 @@ function gameLoop() {
 
         movePlayer(dx, dy);
         animatePlayer();
-        walkAudio.play();
     } else {
-        walkAudio.pause();
         resetAnimation();
     }
 

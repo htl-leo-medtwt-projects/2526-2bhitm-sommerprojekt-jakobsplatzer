@@ -2,6 +2,13 @@
 /// <reference path="spritegame_keyevents.js" />
 /// <reference path="spritegame_player.js" />
 
+// Define missing variables
+let GAME_CONFIG = {
+    characterSpeed: 5,
+    gameSpeed: 60,
+    playTime: 30
+};
+
 let homeButton = document.getElementById('home-button');
 let startSection = document.getElementById('start-section');
 let videoSection = document.getElementById('video-section');
@@ -10,6 +17,7 @@ let conWithChick2 = document.getElementById('con-with-chick2');
 let conWithChick3 = document.getElementById('con-with-chick3');
 let conWithChick4 = document.getElementById('con-with-chick4');
 let game1 = document.getElementById('game-screen1');
+let player = document.getElementById('player');
 
 homeButton.style.display = 'none';
 videoSection.style.display = 'none';
@@ -18,6 +26,7 @@ conWithChick2.style.display = 'none';
 conWithChick3.style.display = 'none';
 conWithChick4.style.display = 'none';
 game1.style.display = 'none';
+player.style.display = 'none';
 
 function backToHome(){
     startSection.style.display = '';
@@ -28,6 +37,7 @@ function backToHome(){
     conWithChick3.style.display = 'none';
     conWithChick4.style.display = 'none';
     game1.style.display = 'none';
+    spriteImg.style.display = 'none';
 }
 
 function startToVid(){
@@ -57,16 +67,26 @@ function Con3ToCon4(){
 function Con4ToGame1(){
     conWithChick4.style.display = 'none';
     game1.style.display = '';
+    player.style.display = '';
+    startGame();
 }
 
 function reset(){
-    buttonAudio.play();
     gotToStart();
     location.reload();
 }
 
 
-//Mit Chatinger aber der hat verckakt leider 
+/***********************************
+ * GAME SCREEN
+ ***********************************/
+let GAME_SCREEN = {
+    surface: document.getElementById('surface'),
+    surfaceScale: '80%',
+    clockBox: document.getElementById('clockBox'),
+    startButton: document.getElementById('startButton'),
+    debug_output: document.getElementById('debug_output')
+}
 
 // Pixel-Bewegungsbereich
 const moveArea = { left: 0, top: 0, width: 700, height: 300 };
@@ -104,7 +124,6 @@ document.addEventListener("mousemove", (e) => {
 
 // Check Name Funktion
 function checkInputName() {
-    buttonAudio.play();
     const name1 = document.getElementById('name-input-fox').value.trim().toLowerCase();
 
     if (name1 !== 'fox') {
@@ -157,62 +176,18 @@ function renderScoreboard() {
   });
 }
 
-
-
 function startGame() {
-    buttonAudio.play();
-
-
-    setTimeout(() => {
-        countdownAudio.play();
-        startCountdown.innerHTML = '<img id="3sek-counter-img" src="img/nr3.png" alt="counter">';
-    }, 1000);
-
-    setTimeout(() => {
-        startCountdown.innerHTML = '<img id="3sek-counter-img" src="img/nr2.png" alt="counter">';
-    }, 2000);
-
-    setTimeout(() => {
-        startCountdown.innerHTML = '<img id="3sek-counter-img" src="img/nr1.png" alt="counter">';
-    }, 3000);
-
-    nameInput2.style.display = 'none';
-    startSection.style.display = 'none';
-    dashboard.style.display = 'none';
-    surface.style.display = '';
-
-
     PLAYER.box.style.left = '350px'; // starting position
     PLAYER.box.style.top = '180px'; // starting position
     PLAYER.box.style.opacity = '1'; // show player
     PLAYER.spriteImg.style.right = '0px'; // starting animation
 
-    GAME_SCREEN.startButton.innerHTML = 'STARTED';
-    GAME_SCREEN.startButton.removeAttribute('onclick');
 
-    setTimeout(() => {
-        isGameRunning = true;
-        startCountdownContainer.style.display = 'none';
-        gameLoop();
-        startPlayTimer();
-    }, 4000)
+    isGameRunning = true;
+    gameLoop();
 }
 
 
-function startPlayTimer() {
-    GAME_CONFIG.playTime = 30;
-
-    gameTimer = setInterval(() => {
-        GAME_CONFIG.playTime--;
-
-        timer.innerHTML = GAME_CONFIG.playTime;
-
-        if (GAME_CONFIG.playTime <= 0) {
-            clearInterval(gameTimer);
-            endGame();
-        }
-    }, 1000);
-}
 
 function endGame() {
     isGameRunning = false;
@@ -243,7 +218,6 @@ function endGame() {
 }
 
 function saveResult(){
-    buttonAudio.play();
 
     const name = document.getElementById("realName").value;
 

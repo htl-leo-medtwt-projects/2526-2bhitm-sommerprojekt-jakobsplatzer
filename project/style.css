@@ -20,6 +20,28 @@ h2{
     margin-top: 1rem;
 }
 
+#player {
+    transform: scale(1.1);
+  position: absolute;
+  width: 32px;
+  /* viewing window */
+  height: 32px;
+  /* viewing window */
+  overflow: hidden;
+  opacity: 0;
+  /* hide till start */
+  top: 40%;
+  left: 30%;
+}
+
+#spriteImg {
+  height: 128px;
+  bottom: 64px;
+  /* which row of sprite */
+  position: relative;
+}
+
+
 #home-button{
     position: absolute;
     left: 5rem;
