@@ -152,15 +152,21 @@ transform: scale(2);
 
 #video-section{
     user-select: none;
+    display: flex;
+    justify-content: center;
+    background: #fefae0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-#video{
-    align-self: center;
+#intro-video{
+    height: 100vh;
+    transform: scale(1.15);
 }
 
 .speeking-bubble{
-        z-index: 100000;
-
+    z-index: 100000;
     position: absolute;
     left: 45%;
     top: 18%;
@@ -182,8 +188,8 @@ transform: scale(2);
 }
 
 #speeking-arrow3{
-        margin-right: 5rem;
-        margin-top: 5rem;
+    margin-right: 5rem;
+    margin-top: 5rem;
 }
 
 #speeking-arrow4{
@@ -230,5 +236,5 @@ transform: scale(2);
 }
 
 #password-input1{
-
+    
 }

@@ -159,45 +159,6 @@ function checkInputName() {
     }
 }
 
-
-//LeaderBoard
-
-function addPlayerToScoreboard(name, chicks = 0) {
-    const newPlayer = { name, chicks };
-
-    scoreboardData.push(newPlayer);
-
-    scoreboardData.sort((a, b) => b.chicks - a.chicks);
-
-    if (scoreboardData.length > 4) {
-        scoreboardData.pop();
-    }
-
-    saveScoreboard();
-    renderScoreboard();
-}
-
-function saveScoreboard() {
-    localStorage.setItem("scoreboardData", JSON.stringify(scoreboardData));
-}
-
-function renderScoreboard() {
-    if (!leaderboard) return;
-
-    scoreboardData.sort((a, b) => b.chicks - a.chicks);
-
-    leaderboard.innerHTML += "";
-
-    scoreboardData.forEach((player) => {
-        const row = document.createElement("div");
-        row.className = "scoreboard-row";
-        row.innerHTML = `
-      <span class="scoreboard-name">${player.name}</span>
-      <span class="scoreboard-chicks">Score: ${player.chicks}</span>`;
-        leaderboard.appendChild(row);
-    });
-}
-
 function startGame() {
     PLAYER.box.style.left = '350px'; // starting position
     PLAYER.box.style.top = '180px'; // starting position
