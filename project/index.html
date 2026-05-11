@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sommerprojekt</title>
     <link rel="stylesheet" href="style.css">
     <script src="./js/spritegame_detectCollisions.js" defer></script>
-	<script src="./js/spritegame_keyevents.js" defer></script>
-	<script src="./js/spritegame_player.js" defer></script>
-	<script src="./js/spritegame_main.js" defer></script>
-	<script src="./js/spritegame_loop.js" defer></script>
+    <script src="./js/spritegame_keyevents.js" defer></script>
+    <script src="./js/spritegame_player.js" defer></script>
+    <script src="./js/spritegame_main.js" defer></script>
+    <script src="./js/spritegame_loop.js" defer></script>
 </head>
+
 <body>
 
     <div id="player">
@@ -33,8 +35,9 @@
         </div>
     </div>
 
-     <div id="video-section" >
-        <video src="vid/Lamb-Intro.mp4" controls></video>
+    <div id="video-section">
+        <video id="intro-video" src="vid/Lamb-Intro.mp4" controls></video>
+
         <div class="next-btn" onclick="vidToCon()">
             <p>Next</p>
             <img src="img/arrow.svg" alt="arrow">
@@ -45,10 +48,11 @@
         <h2>Story</h2>
         <div class="speeking-bubble">
             <p>“I don’t understand… I’ve walked around this barn a hundred times.<br>
-                 The door is locked, and there’s no way out.”</p>
+                The door is locked, and there’s no way out.”</p>
         </div>
-        <svg id="speeking-arrow1" xmlns="http://www.w3.org/2000/svg" width="123" height="161" viewBox="0 0 123 161" fill="none">
-            <path d="M9.41753e-05 160.906L58.5647 -6.80835e-07L122.583 41.3484L9.41753e-05 160.906Z" fill="#F9E9D1"/>
+        <svg id="speeking-arrow1" xmlns="http://www.w3.org/2000/svg" width="123" height="161" viewBox="0 0 123 161"
+            fill="none">
+            <path d="M9.41753e-05 160.906L58.5647 -6.80835e-07L122.583 41.3484L9.41753e-05 160.906Z" fill="#F9E9D1" />
         </svg>
 
         <div class="next-btn" onclick="Con1ToCon2()">
@@ -65,14 +69,15 @@
                 Sometimes the way out isn’t blocked by walls, but by things you don’t notice.”
             </p>
         </div>
-        <svg id="speeking-arrow2" xmlns="http://www.w3.org/2000/svg" width="123" height="161" viewBox="0 0 123 161" fill="none">
-            <path d="M9.41753e-05 160.906L58.5647 -6.80835e-07L122.583 41.3484L9.41753e-05 160.906Z" fill="#F9E9D1"/>
+        <svg id="speeking-arrow2" xmlns="http://www.w3.org/2000/svg" width="123" height="161" viewBox="0 0 123 161"
+            fill="none">
+            <path d="M9.41753e-05 160.906L58.5647 -6.80835e-07L122.583 41.3484L9.41753e-05 160.906Z" fill="#F9E9D1" />
         </svg>
         <div class="next-btn" onclick="Con2ToCon3()">
             <p>Next</p>
             <img src="img/arrow.svg" alt="arrow">
         </div>
-    </div>    
+    </div>
 
     <div id="con-with-chick3" class="con-with-chick">
         <h2>Story</h2>
@@ -81,15 +86,16 @@
                 “Hidden obstacles? But I don’t see anything unusual—just hay, wood, and shadows.”
             </p>
         </div>
-        <svg id="speeking-arrow3" xmlns="http://www.w3.org/2000/svg" width="123" height="161" viewBox="0 0 123 161" fill="none">
-            <path d="M9.41753e-05 160.906L58.5647 -6.80835e-07L122.583 41.3484L9.41753e-05 160.906Z" fill="#F9E9D1"/>
+        <svg id="speeking-arrow3" xmlns="http://www.w3.org/2000/svg" width="123" height="161" viewBox="0 0 123 161"
+            fill="none">
+            <path d="M9.41753e-05 160.906L58.5647 -6.80835e-07L122.583 41.3484L9.41753e-05 160.906Z" fill="#F9E9D1" />
         </svg>
 
         <div class="next-btn" onclick="Con3ToCon4()">
             <p>Next</p>
             <img src="img/arrow.svg" alt="arrow">
         </div>
-    </div>    
+    </div>
 
     <div id="con-with-chick4" class="con-with-chick">
         <h2>Story</h2>
@@ -99,8 +105,9 @@
                 The path might be there—you just haven’t uncovered it yet.”
             </p>
         </div>
-        <svg id="speeking-arrow4" xmlns="http://www.w3.org/2000/svg" width="123" height="161" viewBox="0 0 123 161" fill="none">
-            <path d="M9.41753e-05 160.906L58.5647 -6.80835e-07L122.583 41.3484L9.41753e-05 160.906Z" fill="#F9E9D1"/>
+        <svg id="speeking-arrow4" xmlns="http://www.w3.org/2000/svg" width="123" height="161" viewBox="0 0 123 161"
+            fill="none">
+            <path d="M9.41753e-05 160.906L58.5647 -6.80835e-07L122.583 41.3484L9.41753e-05 160.906Z" fill="#F9E9D1" />
         </svg>
 
         <div class="next-btn" onclick="Con4ToGame1()">
@@ -109,9 +116,18 @@
         </div>
     </div>
 
-    <div id="game-screen1" onclick="Game1ToGame2()"></div>
-    <div id="game-screen2" onclick="Game2ToGame3()"></div>
-    <div id="game-screen3" onclick="Game3ToGame4()"></div>
-    <div id="game-screen4" onclick="Game4ToGame5()"></div>
+    <div id="game-screen1" >
+        <div id="transition-box1"></div>
+        <div id="lock-screen1">
+            <input id="password-input1" type="text" placeholder="Password">
+            <div id="back-button">
+                <img id="" src="img/left-arrow.png" alt="arrow">
+            </div>
+        </div>
+    </div>
+    <div id="game-screen2"></div>
+    <div id="game-screen3"></div>
+    <div id="game-screen4"></div>
 </body>
+
 </html>

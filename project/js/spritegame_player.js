@@ -62,6 +62,10 @@ function movePlayer(dx, dy, direction) {
     } else if (direction === 'right') {
         PLAYER.box.style.transform = 'scaleX(1)';
     }
+
+    if(isColliding(player, transition1, 10)){
+        Game1ToLock1();
+    }
 }
 
 function animatePlayer() {

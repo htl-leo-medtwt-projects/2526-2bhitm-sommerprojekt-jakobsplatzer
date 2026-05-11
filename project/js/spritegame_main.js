@@ -17,6 +17,10 @@ let conWithChick2 = document.getElementById('con-with-chick2');
 let conWithChick3 = document.getElementById('con-with-chick3');
 let conWithChick4 = document.getElementById('con-with-chick4');
 let game1 = document.getElementById('game-screen1');
+let game2 = document.getElementById('game-screen2');
+let transition1 = document.getElementById('transition-box1');
+let lockScreen1 = document.getElementById('lock-screen1');
+let video = document.getElementById('intro-video');
 let player = document.getElementById('player');
 
 homeButton.style.display = 'none';
@@ -26,9 +30,10 @@ conWithChick2.style.display = 'none';
 conWithChick3.style.display = 'none';
 conWithChick4.style.display = 'none';
 game1.style.display = 'none';
+game2.style.display = 'none';
 player.style.display = 'none';
 
-function backToHome(){
+function backToHome() {
     startSection.style.display = '';
     homeButton.style.display = 'none';
     videoSection.style.display = 'none';
@@ -38,40 +43,58 @@ function backToHome(){
     conWithChick4.style.display = 'none';
     game1.style.display = 'none';
     spriteImg.style.display = 'none';
+    reset();
 }
 
-function startToVid(){
+function startToVid() {
     startSection.style.display = 'none';
     videoSection.style.display = '';
+    video.play();
+    video.play().then(() => {
+        setTimeout(() => {
+            vidToCon();
+        }, 27000);
+    });
 }
 
-function vidToCon(){
+function vidToCon() {
     videoSection.style.display = 'none';
     conWithChick1.style.display = '';
     homeButton.style.display = '';
-
 }
 
-function Con1ToCon2(){
+function Con1ToCon2() {
     conWithChick1.style.display = 'none';
     conWithChick2.style.display = '';
 }
-function Con2ToCon3(){
+function Con2ToCon3() {
     conWithChick2.style.display = 'none';
     conWithChick3.style.display = '';
 }
-function Con3ToCon4(){
+function Con3ToCon4() {
     conWithChick3.style.display = 'none';
     conWithChick4.style.display = '';
 }
-function Con4ToGame1(){
+function Con4ToGame1() {
     conWithChick4.style.display = 'none';
+    lockScreen1.style.display = 'none';
     game1.style.display = '';
     player.style.display = '';
     startGame();
 }
 
-function reset(){
+function Game1ToLock1(){
+    lockScreen1.style.display = '';
+    game1.style.display = '';
+    player.style.display = 'none';
+}
+
+function Game1ToGame2(){
+    game1.style.display = 'none';
+    game2.style.display = '';
+}
+
+function reset() {
     gotToStart();
     location.reload();
 }
@@ -140,40 +163,39 @@ function checkInputName() {
 //LeaderBoard
 
 function addPlayerToScoreboard(name, chicks = 0) {
-  const newPlayer = { name, chicks };
+    const newPlayer = { name, chicks };
 
-  scoreboardData.push(newPlayer);
+    scoreboardData.push(newPlayer);
 
-  scoreboardData.sort((a, b) => b.chicks - a.chicks);
+    scoreboardData.sort((a, b) => b.chicks - a.chicks);
 
-  if (scoreboardData.length > 4) {
-    scoreboardData.pop();
-  }
+    if (scoreboardData.length > 4) {
+        scoreboardData.pop();
+    }
 
-  saveScoreboard();
-  renderScoreboard();
+    saveScoreboard();
+    renderScoreboard();
 }
- 
+
 function saveScoreboard() {
-  localStorage.setItem("scoreboardData", JSON.stringify(scoreboardData));
+    localStorage.setItem("scoreboardData", JSON.stringify(scoreboardData));
 }
 
 function renderScoreboard() {
-  if (!leaderboard) return;
+    if (!leaderboard) return;
 
-  scoreboardData.sort((a, b) => b.chicks - a.chicks);
+    scoreboardData.sort((a, b) => b.chicks - a.chicks);
 
     leaderboard.innerHTML += "";
 
-  scoreboardData.forEach((player) => {
-    const row = document.createElement("div");
-    row.className = "scoreboard-row";
-    row.innerHTML = `
+    scoreboardData.forEach((player) => {
+        const row = document.createElement("div");
+        row.className = "scoreboard-row";
+        row.innerHTML = `
       <span class="scoreboard-name">${player.name}</span>
-      <span class="scoreboard-chicks">Score: ${player.chicks}</span>
-    `;
-    leaderboard.appendChild(row);
-  });
+      <span class="scoreboard-chicks">Score: ${player.chicks}</span>`;
+        leaderboard.appendChild(row);
+    });
 }
 
 function startGame() {
@@ -217,7 +239,7 @@ function endGame() {
     startCountdownContainer.style.display = '';
 }
 
-function saveResult(){
+function saveResult() {
 
     const name = document.getElementById("realName").value;
 
