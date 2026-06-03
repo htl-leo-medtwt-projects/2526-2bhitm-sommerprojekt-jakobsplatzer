@@ -27,29 +27,35 @@ let PLAYER = {
  * @param {number} dy - player y move offset in pixel
  * @param {number} dr - player heading direction (-1: look left || 1: look right)
  */
+function isCollidingWithCage() {
+    return (
+        isColliding(PLAYER.box, cageBox1, 0) ||
+        isColliding(PLAYER.box, cageBox2, 0) ||
+        isColliding(PLAYER.box, cageBox3, 0) ||
+        isColliding(PLAYER.box, cageBox4, 0)
+    );
+}
+
 function movePlayer(dx, dy, direction) {
 
-    let originalX = parseFloat(PLAYER.box.style.left);
-    let originalY = parseFloat(PLAYER.box.style.top);
+    let oldLeft = PLAYER.box.style.left;
+    let oldTop = PLAYER.box.style.top;
+    let nextX = parseFloat(oldLeft) + dx;
+    let nextY = parseFloat(oldTop) + dy;
 
-    if (originalX + dx < 10) {
-        return;
+    // X-Achse prüfen
+    PLAYER.box.style.left = nextX + 'px';
+    if (isCollidingWithCage()) {
+        PLAYER.box.style.left = oldLeft;
     }
 
-    if (originalY + dy < 0) {
-        return;
+    // Y-Achse prüfen
+    PLAYER.box.style.top = nextY + 'px';
+    if (isCollidingWithCage()) {
+        PLAYER.box.style.top = oldTop;
     }
 
-    if (originalX + dx > maxLeft) {
-        return;
-    }
 
-    if (originalY + dy > maxTop) {
-        return;
-    }
-
-    PLAYER.box.style.left = (originalX + dx) + 'px';
-    PLAYER.box.style.top = (originalY + dy) + 'px';
 
     // Richtung merken
     if (direction) {
@@ -63,9 +69,11 @@ function movePlayer(dx, dy, direction) {
         PLAYER.box.style.transform = 'scaleX(1)';
     }
 
-    if(isColliding(player, transition1, 10)){
+    if (isColliding(PLAYER.box, transition1, 10)) {
         Game1ToLock1();
     }
+
+
 }
 
 function animatePlayer() {

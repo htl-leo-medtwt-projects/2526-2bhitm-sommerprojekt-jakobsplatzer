@@ -3,7 +3,7 @@
     src: url(font/RammettoOne-Regular.ttf);
 }
 
-*{
+* {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -14,35 +14,35 @@
     text-align: center;
 }
 
-h2{
+h2 {
     font-size: 2rem;
     -webkit-text-stroke: 3px #F9E9D1;
     margin-top: 1rem;
 }
 
 #player {
-transform: scale(2);
-  position: absolute;
-  width: 32px;
-  /* viewing window */
-  height: 32px;
-  /* viewing window */
-  overflow: hidden;
-  opacity: 0;
-  /* hide till start */
-  top: 40%;
-  left: 30%;
+    transform: scale(2);
+    position: absolute;
+    width: 32px;
+    /* viewing window */
+    height: 32px;
+    /* viewing window */
+    overflow: hidden;
+    opacity: 0;
+    /* hide till start */
+    top: 40%;
+    left: 30%;
 }
 
 #spriteImg {
-  height: 128px;
-  bottom: 64px;
-  /* which row of sprite */
-  position: relative;
+    height: 128px;
+    bottom: 64px;
+    /* which row of sprite */
+    position: relative;
 }
 
 
-#home-button{
+#home-button {
     position: absolute;
     left: 5rem;
     top: -3.5rem;
@@ -53,19 +53,20 @@ transform: scale(2);
     height: 6rem;
     cursor: pointer;
     transition: all 0.5s ease;
+    z-index: 1000;
 }
 
-#home-icon{
+#home-icon {
     margin-top: 50%;
     width: 30%;
     height: 50%;
 }
 
-#home-button:hover{
+#home-button:hover {
     top: -3rem;
 }
 
-#start-section{
+#start-section {
     height: 100vh;
     width: 100vw;
     background: url(img/start-screen.png);
@@ -78,23 +79,23 @@ transform: scale(2);
     flex-direction: column;
 }
 
-#start-text-container{
+#start-text-container {
     height: 480px;
 }
 
-#cloud-img{
+#cloud-img {
     position: relative;
     width: 530px;
     height: 530px;
 }
 
-#start-text{
+#start-text {
     top: -330px;
     position: relative;
     text-align: center;
 }
 
-#start-button1{
+#start-button1 {
     width: 137px;
     height: 66px;
     background-color: white;
@@ -103,11 +104,11 @@ transform: scale(2);
     transition: all 1s ease;
 }
 
-#start-button1:hover{
+#start-button1:hover {
     transform: scale(1.1);
 }
 
-.con-with-chick{
+.con-with-chick {
     background: url(img/with-chicken.png);
     background-size: cover;
     background-position: center;
@@ -116,11 +117,12 @@ transform: scale(2);
     width: 100vw;
 }
 
-.con-with-chick svg{
+.con-with-chick svg {
     margin-top: 7rem;
 }
 
-.next-btn{
+.next-btn {
+    user-select: none;
     position: absolute;
     bottom: 1rem;
     right: 1rem;
@@ -136,21 +138,21 @@ transform: scale(2);
     font-size: 1.1rem;
 }
 
-.next-btn:hover{
+.next-btn:hover {
     transform: scale(1.1);
 }
 
-.next-btn p{
+.next-btn p {
     font-size: 1.1rem;
 }
 
-.next-btn img{
+.next-btn img {
     margin-left: 0.5rem;
     width: 20%;
     height: 80%;
 }
 
-#video-section{
+#video-section {
     user-select: none;
     display: flex;
     justify-content: center;
@@ -160,12 +162,12 @@ transform: scale(2);
     background-repeat: no-repeat;
 }
 
-#intro-video{
+#intro-video {
     height: 100vh;
     transform: scale(1.15);
 }
 
-.speeking-bubble{
+.speeking-bubble {
     z-index: 100000;
     position: absolute;
     left: 45%;
@@ -176,38 +178,41 @@ transform: scale(2);
     border-radius: 20px;
 }
 
-.speeking-bubble p{
+.speeking-bubble p {
     font-size: 0.6rem;
     -webkit-text-stroke: 0.5px #F9E9D1;
 }
 
-#speeking-arrow2{
+#speeking-arrow2 {
     margin-top: 8rem;
     margin-left: -0.6rem;
     transform: rotateY(180deg);
 }
 
-#speeking-arrow3{
+#speeking-arrow3 {
     margin-right: 5rem;
     margin-top: 5rem;
 }
 
-#speeking-arrow4{
+#speeking-arrow4 {
     margin-top: 8rem;
     margin-left: -0.6rem;
     transform: rotateY(180deg);
     z-index: 1;
 }
 
-#game-screen1{
+#game-screen1 {
     height: 100vh;
     width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-image: url(img/wooden-barn.png);
     background-size: cover;
     background-position: center;
 }
 
-#transition-box1{
+#transition-box1 {
     position: absolute;
     align-self: center;
     top: 0;
@@ -215,7 +220,7 @@ transform: scale(2);
     height: 1rem;
 }
 
-#game-screen2{
+#game-screen2 {
     height: 100vh;
     width: 100vw;
     background-image: url(img/tool-room.png);
@@ -223,7 +228,7 @@ transform: scale(2);
     background-position: center;
 }
 
-#lock-screen1{
+#lock-screen1 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -235,6 +240,81 @@ transform: scale(2);
     background-repeat: no-repeat;
 }
 
-#password-input1{
-    
+#password-input1 {}
+
+#back-button {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    background-color: #5C4029;
+
+}
+
+#cage-box1 {
+    position: absolute;
+    top: 1.2rem;
+    left: 0rem;
+    width: 21rem;
+    height: 2rem;
+}
+
+#cage-box2 {
+    position: absolute;
+    top: 1.2rem;
+    left: 1.5rem;
+    width: 2rem;
+    height: 21.3rem;
+}
+
+#cage-box3 {
+    position: absolute;
+    top: 20.5rem;
+    left: 0rem;
+    width: 21rem;
+    height: 2rem;
+}
+
+#cage-box4 {
+    position: absolute;
+    top: 1.2rem;
+    left: 19rem;
+    width: 2rem;
+    height: 21.3rem;
+}
+
+#cage-box5 {
+    position: absolute;
+    top: 1.2rem;
+    right: 19rem;
+    width: 2rem;
+    height: 21.3rem;
+}
+
+#cage-box6 {
+    position: absolute;
+    top: 20.5rem;
+    right: 0rem;
+    width: 21rem;
+    height: 2rem;
+}
+
+.cage-box{
+    background-color: red;
+}
+
+/*Hay-Ball*/
+
+#hay{
+    position: absolute;
+    top: 15rem;
+    left: 13rem;
+    height: 6.5rem;
+    width: 6.5rem;
+    overflow: hidden;
+    border-radius: 100%;
+}
+
+#hay img{
+    width: 100%;
+    height: 100%;
 }
