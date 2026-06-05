@@ -9,8 +9,10 @@
 /***********************************
  * GAME LOOP
  * **********************************/
-function gameLoop() {
+let _loopId = 0;
 
+function gameLoop(id) {
+    if (id !== _loopId) return; // veraltete Loop-Instanz abbrechen
     if (!isGameRunning) return;
 
     let dx = 0;
@@ -36,6 +38,12 @@ function gameLoop() {
 
     if (dx !== 0 || dy !== 0) {
 
+        if (typeof _saveThrottle === 'undefined') window._saveThrottle = 0;
+        _saveThrottle++;
+        if (_saveThrottle >= 180) {
+            saveGame(currentGameScreen());
+            _saveThrottle = 0;
+        }
 
         if (dx < 0) {
             PLAYER.spriteDirection = 'left';
@@ -53,6 +61,6 @@ function gameLoop() {
         resetAnimation();
     }
 
-    setTimeout(gameLoop, 1000 / GAME_CONFIG.gameSpeed);
+    setTimeout(() => gameLoop(id), 1000 / GAME_CONFIG.gameSpeed);
 }
 

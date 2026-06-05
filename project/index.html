@@ -23,6 +23,91 @@
         <img id="home-icon" src="img/home-icon.svg" alt="HomeIcon">
     </div>
 
+    <div id="inventory-beam-container" style="display:none;">
+        <div id="inventory-beam">
+            <div class="inventory-item" id="inventory-item1"></div>
+            <div class="inventory-item" id="inventory-item2"></div>
+            <div class="inventory-item" id="inventory-item3"></div>
+            <div class="inventory-item" id="inventory-item4"></div>
+            <div class="inventory-item" id="inventory-item5"></div>
+            <div class="inventory-item" id="inventory-item6"></div>
+            <div class="inventory-item" id="inventory-item7"></div>
+            <div class="inventory-item" id="inventory-item8"></div>
+            <div class="inventory-item" id="inventory-item9"></div>
+        </div>
+    </div>
+
+      <div id="inventory-overlay">
+            <div id="inventory-wrapper">
+                <img src="img/inventory.png" alt="inventory-large">
+                <div id="inventory-grid">
+                    <div class="inv-cell" id="inv-cell1"></div>
+                    <div class="inv-cell" id="inv-cell2"></div>
+                    <div class="inv-cell" id="inv-cell3"></div>
+                    <div class="inv-cell" id="inv-cell4"></div>
+                    <div class="inv-cell" id="inv-cell5"></div>
+                    <div class="inv-cell" id="inv-cell6"></div>
+                    <div class="inv-cell" id="inv-cell7"></div>
+                    <div class="inv-cell" id="inv-cell8"></div>
+                    <div class="inv-cell" id="inv-cell9"></div>
+                    <div class="inv-cell" id="inv-cell10"></div>
+                    <div class="inv-cell" id="inv-cell11"></div>
+                    <div class="inv-cell" id="inv-cell12"></div>
+                    <div class="inv-cell" id="inv-cell13"></div>
+                    <div class="inv-cell" id="inv-cell14"></div>
+                    <div class="inv-cell" id="inv-cell15"></div>
+                    <div class="inv-cell" id="inv-cell16"></div>
+                    <div class="inv-cell" id="inv-cell17"></div>
+                    <div class="inv-cell" id="inv-cell18"></div>
+                    <div class="inv-cell" id="inv-cell19"></div>
+                    <div class="inv-cell" id="inv-cell20"></div>
+                    <div class="inv-cell" id="inv-cell21"></div>
+                    <div class="inv-cell" id="inv-cell22"></div>
+                    <div class="inv-cell" id="inv-cell23"></div>
+                    <div class="inv-cell" id="inv-cell24"></div>
+                    <div class="inv-cell" id="inv-cell25"></div>
+                    <div class="inv-cell" id="inv-cell26"></div>
+                    <div class="inv-cell" id="inv-cell27"></div>
+                    <div class="inv-cell" id="inv-cell28"></div>
+                    <div class="inv-cell" id="inv-cell29"></div>
+                    <div class="inv-cell" id="inv-cell30"></div>
+                    <div class="inv-cell" id="inv-cell31"></div>
+                    <div class="inv-cell" id="inv-cell32"></div>
+                    <div class="inv-cell" id="inv-cell33"></div>
+                    <div class="inv-cell" id="inv-cell34"></div>
+                    <div class="inv-cell" id="inv-cell35"></div>
+                    <div class="inv-cell" id="inv-cell36"></div>
+                </div>
+                <div id="inventory-book-button" onclick="openLevelMenu()"></div>
+            </div>
+        </div>
+
+        <div id="level-menu-overlay">
+            <div id="level-menu">
+                <h2>Levels</h2>
+
+                <div class="level-row">
+                    <p class="level-name">Level 1</p>
+                    <div class="level-bar"><div class="level-bar-fill" id="level-fill1"></div></div>
+                    <p class="level-percent" id="level-percent1">0%</p>
+                </div>
+
+                <div class="level-row">
+                    <p class="level-name">Level 2</p>
+                    <div class="level-bar"><div class="level-bar-fill" id="level-fill2"></div></div>
+                    <p class="level-percent" id="level-percent2">0%</p>
+                </div>
+
+                <div class="level-row">
+                    <p class="level-name">Level 3</p>
+                    <div class="level-bar"><div class="level-bar-fill" id="level-fill3"></div></div>
+                    <p class="level-percent" id="level-percent3">0%</p>
+                </div>
+
+                <p id="level-menu-close" onclick="closeLevelMenu()">Schließen</p>
+            </div>
+        </div>
+
 
     <div id="start-section">
         <div id="start-text-container">
@@ -32,6 +117,10 @@
 
         <div id="start-button1" onclick="startToVid()">
             <p>Play</p>
+        </div>
+
+        <div id="continue-button" onclick="loadSave()">
+            <p>Continue</p>
         </div>
     </div>
 
@@ -122,9 +211,21 @@
             <img src="img/stroh.png" alt="stroh">
         </div>
 
-        <div id="checkpoint1"></div>
-        <div id="checkpoint2"></div>
-        <div id="checkpoint3"></div>
+        <div id="note-paper">
+            <img src="img/note-paper.png" alt="note-paper">
+        </div>
+        <div id="e-button">
+            <p>Press: E</p>
+        </div>
+        <div id="note-paper-overlay">
+            <img src="img/note-paper.png" alt="note-paper-large">
+            <p id="note-paper-close">ESC</p>
+        </div>
+
+  
+        <div id="checkpoint1" class="checkpoint"></div>
+        <div id="checkpoint2" class="checkpoint"></div>
+        <div id="checkpoint3" class="checkpoint"></div>
 
 
         <div id="transition-box1"></div>
@@ -137,16 +238,32 @@
         <div id="cage-box6" class="cage-box"></div>
 
 
+        <div id="note-screen">
+
+        </div>
 
         <div id="lock-screen1">
             <input id="password-input1" type="password" placeholder="Password">
-            <div id="back-button">
+            <div id="back-button" onclick="Lock1ToGame1()">
                 <img id="" src="img/left-arrow.png" alt="arrow">
             </div>
         </div>
     </div>
 
-    <div id="game-screen2"></div>
+    <div id="game-screen2">
+        <div id="cage2-box1" class="cage-box2"></div>
+        <div id="cage2-box2" class="cage-box2"></div>
+        <div id="cage2-box3" class="cage-box2"></div>
+        <div id="cage2-box4" class="cage-box2"></div>
+        <div id="cage2-box5" class="cage-box2"></div>
+        <div id="cage2-box6" class="cage-box2"></div>
+        <div id="cage2-box7" class="cage-box2"></div>
+        <div id="cage2-box8" class="cage-box2"></div>
+        <div id="cage2-box9" class="cage-box2"></div>
+        <div id="cage2-box10" class="cage-box2"></div>
+        <div id="cage2-box11" class="cage-box2"></div>
+        <div id="cage2-box12" class="cage-box2"></div>
+    </div>
     <div id="game-screen3"></div>
     <div id="game-screen4"></div>
 </body>

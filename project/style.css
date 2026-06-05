@@ -32,6 +32,7 @@ h2 {
     /* hide till start */
     top: 40%;
     left: 30%;
+    z-index: 1;
 }
 
 #spriteImg {
@@ -65,6 +66,36 @@ h2 {
 #home-button:hover {
     top: -3rem;
 }
+
+#inventory-beam-container {
+    position: absolute;
+    width: 100vw;
+    height: auto;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#inventory-beam {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    width: 45%;
+    aspect-ratio: 1165 / 164;
+    background-image: url(img/inventory-beam.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.inventory-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 #start-section {
     height: 100vh;
@@ -105,6 +136,20 @@ h2 {
 }
 
 #start-button1:hover {
+    transform: scale(1.1);
+}
+
+#continue-button {
+    background-color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 1s ease;
+    margin-top: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+#continue-button:hover {
     transform: scale(1.1);
 }
 
@@ -224,8 +269,110 @@ h2 {
     height: 100vh;
     width: 100vw;
     background-image: url(img/tool-room.png);
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
+}
+
+.cage-box2 {
+    position: absolute;
+    background-color: rgba(255, 0, 0, 0.4); 
+}
+
+/* Werkbank oben Mitte */
+#cage2-box1 {
+    left: 35%;
+    top: 1%;
+    width: 40%;
+    height: 26%;
+}
+
+/* Blaue Werkzeugkiste oben links */
+#cage2-box2 {
+    left: 27%;
+    top: 8%;
+    width: 8%;
+    height: 17%;
+}
+
+/* Grüne Maschine oben rechts */
+#cage2-box3 {
+    left: 78%;
+    top: 9%;
+    width: 9%;
+    height: 20%;
+    transform: rotate(20deg);
+}
+
+/* Kisten linke Wand */
+#cage2-box4 {
+    left: 7%;
+    top: 47%;
+    width: 13%;
+    height: 14%;
+}
+
+/* Kisten unten links */
+#cage2-box5 {
+    left: 8%;
+    top: 68%;
+    width: 10%;
+    height: 26%;
+}
+
+/* Motorblock-Tisch Mitte */
+#cage2-box6 {
+    left: 39%;
+    top: 44%;
+    width: 22%;
+    height: 20%;
+}
+
+/* Grüne Maschine rechts */
+#cage2-box7 {
+    left: 80%;
+    top: 44%;
+    width: 17%;
+    height: 34%;
+}
+
+/* Rote Objekte + Fässer unten Mitte */
+#cage2-box8 {
+    left: 35%;
+    top: 78%;
+    width: 40%;
+    height: 20%;
+}
+
+/* Blauer Tank unten rechts */
+#cage2-box9 {
+    left: 72%;
+    top: 66%;
+    width: 13%;
+    height: 17%;
+}
+
+/* Gabelstabler */
+#cage2-box10 {
+    left: 22%;
+    top: 72%;
+    width: 12%;
+    height: 26%;
+}
+
+/* Extra 2 */
+#cage2-box11 {
+    left: 45%;
+    top: 45%;
+    width: 10%;
+    height: 10%;
+}
+
+/* Extra 3 */
+#cage2-box12 {
+    left: 45%;
+    top: 45%;
+    width: 10%;
+    height: 10%;
 }
 
 #lock-screen1 {
@@ -245,14 +392,55 @@ h2 {
     left: 1rem;
     bottom: 1rem;
     background-color: #5C4029;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
 
+#back-button:hover {
+    transform: scale(1.1);
+}
+
+#back-button img{
+    width: 100%;
+    height: auto;
+}
+
+#password-input1 {
+    background-color: #F9E9D1;
+    border: 4px solid #5C4029;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    font-family: Rametto;
+    font-size: 1.8rem;
+    color: #5C4029;
+    -webkit-text-stroke: 0px;
+    text-align: center;
+    width: 16rem;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    letter-spacing: 0.4rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#password-input1:focus {
+    border-color: #E2BF4E;
+    box-shadow: 0 4px 18px rgba(226, 191, 78, 0.6);
+}
+
+#password-input1::placeholder {
+    color: #9e7b5a;
+    -webkit-text-stroke: 0px;
+    font-size: 1.2rem;
+    letter-spacing: 0.1rem;
 }
 
 #cage-box1 {
     position: absolute;
     top: 1.2rem;
     left: 0rem;
-    width: 21rem;
+    width: 19rem;
     height: 2rem;
 }
 
@@ -268,7 +456,7 @@ h2 {
     position: absolute;
     top: 20.5rem;
     left: 0rem;
-    width: 21rem;
+    width: 19rem;
     height: 2rem;
 }
 
@@ -283,7 +471,7 @@ h2 {
 #cage-box5 {
     position: absolute;
     top: 1.2rem;
-    right: 19rem;
+    right: 20rem;
     width: 2rem;
     height: 21.3rem;
 }
@@ -296,23 +484,274 @@ h2 {
     height: 2rem;
 }
 
-.cage-box{
+/*.cage-box {
     background-color: red;
-}
+}*/
 
 /*Hay-Ball*/
 
-#hay{
+#hay {
     position: absolute;
-    top: 15rem;
-    left: 13rem;
+    top: 11rem;
+    left: 11rem;
     height: 6.5rem;
     width: 6.5rem;
     overflow: hidden;
     border-radius: 100%;
+    z-index: 0;
 }
 
-#hay img{
+#hay img {
     width: 100%;
     height: 100%;
+}
+
+/* Checkpoint */
+.checkpoint {
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    /*background-color: red;*/
+}
+
+#checkpoint1 {
+    top: 4.5rem;
+    left: 4.5rem;
+}
+
+#checkpoint2 {
+    left: 4.5rem;
+    top: 18rem;
+}
+
+#checkpoint3 {
+    top: 4.5rem;
+    left: 17rem;
+}
+
+/* Note Paper */
+
+#note-paper{
+    width: 1.5rem;
+    height: auto;
+    position: absolute;
+    bottom: 14rem;
+    right: 5rem;
+}
+
+#note-paper img{
+ width: 100%;
+ height: auto;
+}
+
+#e-button{
+    position: absolute;
+    bottom: 16rem;
+    right: 3rem;;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 5%;
+    padding: 0.5rem;
+}
+#e-button p{
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.1rem;
+    font-size: 1rem;
+    color: white;
+}
+
+#note-paper-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#note-paper-overlay img {
+    width: 35%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 8px;
+}
+
+#note-paper-close {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #F9E9D1;
+    -webkit-text-stroke: 0px;
+    opacity: 0.7;
+    letter-spacing: 0.1rem;
+}
+
+/* ---- Inventar-Overlay ---- */
+#inventory-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#inventory-wrapper {
+    position: relative;
+    width: 90vmin;
+    height: 90vmin;
+    max-width: 600px;
+    max-height: 600px;
+}
+
+#inventory-wrapper img {
+    user-select: none;
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 3%;
+}
+
+/* Grid über dem unteren Haupt-Lager (9 Spalten x 4 Reihen) */
+#inventory-grid {
+    user-select: none;
+    border-radius: 10%;
+    position: absolute;
+    left: 4.5%;
+    top: 47.5%;
+    width: 90.5%;
+    height: 42%;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    /* 3 Reihen, dann eine leere Spacer-Reihe (0.5fr), dann die unterste Reihe */
+    grid-template-rows: 1fr 1fr 1fr 0.2fr 1fr;
+    gap: 1.3%;
+}
+
+.inv-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Unterste 9 Zellen (28-36) in die 5. Reihe, damit Reihe 4 als Abstand frei bleibt */
+.inv-cell:nth-child(n+28) {
+    grid-row: 5;
+}
+
+/* Buch-Button über dem originalen Buch im Inventar-Bild */
+#inventory-book-button {
+    position: absolute;
+    left: 56%;
+    top: 34.5%;
+    width: 13.5%;
+    height: 11.5%;
+    cursor: pointer;
+    border-radius: 8%;
+    transition: transform 0.2s ease;
+    background: url(img/inventors-book-buttton.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* background-color: rgba(255, 0, 0, 0.4); */ /* zum Justieren einkommentieren */
+}
+
+#inventory-book-button:hover {
+    transform: scale(1.1);
+}
+
+/* ---- Level-Menü ---- */
+#level-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+#level-menu {
+    background: url(img/wood-background.jpg);
+    border: 5px solid #5C4029;
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+    width: 26rem;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+#level-menu h2 {
+    color: #F9E9D1;
+    -webkit-text-stroke: 0px;
+    margin: 0 0 0.5rem 0;
+}
+
+.level-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.level-name {
+    color: #F9E9D1;
+    -webkit-text-stroke: 0px;
+    font-size: 1.1rem;
+    width: 5.5rem;
+    text-align: left;
+}
+
+.level-bar {
+    flex: 1;
+    height: 1.4rem;
+    background-color: #3a2819;
+    border: 2px solid #E2BF4E;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.level-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #7ec850;
+    transition: width 0.4s ease;
+}
+
+.level-percent {
+    color: #F9E9D1;
+    -webkit-text-stroke: 0px;
+    font-size: 1rem;
+    width: 4rem;
+    text-align: right;
+}
+
+#level-menu-close {
+    margin-top: 1rem;
+    color: #F9E9D1;
+    -webkit-text-stroke: 0px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    background-color: #B41A34;
+    padding: 0.5rem 1.5rem;
+    border-radius: 12px;
+    transition: transform 0.2s ease;
+}
+
+#level-menu-close:hover {
+    transform: scale(1.1);
 }
