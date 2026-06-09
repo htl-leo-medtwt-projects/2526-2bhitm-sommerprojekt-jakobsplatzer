@@ -275,7 +275,100 @@ h2 {
 
 .cage-box2 {
     position: absolute;
-    background-color: rgba(255, 0, 0, 0.4); 
+    /*background-color: rgba(255, 0, 0, 0.4);*/
+}
+
+#game-screen3 {
+    height: 100vh;
+    width: 100vw;
+    background-image: url(img/tractor.png);
+    background-size: 100% 100%;
+    background-position: center;
+}
+
+.cage-box3 {
+    position: absolute;
+    /* background-color: rgba(255, 0, 0, 0.4); */
+}
+
+/* Grüne Maschinenwand links oben (0–355 × 30–440 px) */
+#cage3-box1 {
+    left: 0%;
+    top: 2.9%;
+    width: 23.1%;
+    height: 37.1%;
+}
+
+/* Blaue Kästen / Ausrüstung links Mitte (0–190 × 430–570 px) */
+#cage3-box2 {
+    left: 0%;
+    top: 42%;
+    width: 12.4%;
+    height: 13.7%;
+}
+
+/* Roter Werkzeugwagen / Rollschrank (110–480 × 535–900 px) */
+#cage3-box3 {
+    left: 7.2%;
+    top: 52.2%;
+    width: 24.1%;
+    height: 35.6%;
+}
+
+/* Motor / Getriebe unten links (0–205 × 875–1024 px) */
+#cage3-box4 {
+    left: 0%;
+    top: 85.4%;
+    width: 13.3%;
+    height: 14.6%;
+}
+
+/* Pylone / Verkehrskegel (430–555 × 640–870 px) */
+#cage3-box5 {
+    left: 28%;
+    top: 62.5%;
+    width: 8.1%;
+    height: 22.5%;
+}
+
+/* Roboterarm – gelber Industriearm (895–1195 × 50–535 px) */
+#cage3-box6 {
+    left: 58.3%;
+    top: 4.9%;
+    width: 19.5%;
+    height: 47.4%;
+}
+
+/* Werkbank rechts – Tisch unter Roboterarm (800–1285 × 455–690 px) */
+#cage3-box7 {
+    left: 52.1%;
+    top: 44.4%;
+    width: 31.6%;
+    height: 22.9%;
+}
+
+/* Werkzeugwand rechts oben – Pegboard (1150–1536 × 0–330 px) */
+#cage3-box8 {
+    left: 74.9%;
+    top: 0%;
+    width: 25.1%;
+    height: 32.2%;
+}
+
+/* Rechte Schränke / Regale (1235–1536 × 315–690 px) */
+#cage3-box9 {
+    left: 80.4%;
+    top: 30.8%;
+    width: 19.6%;
+    height: 36.6%;
+}
+
+/* Kisten und Ausrüstung unten rechts (1010–1536 × 675–1024 px) */
+#cage3-box10 {
+    left: 65.8%;
+    top: 65.9%;
+    width: 34.2%;
+    height: 34.1%;
 }
 
 /* Werkbank oben Mitte */
@@ -300,7 +393,6 @@ h2 {
     top: 9%;
     width: 9%;
     height: 20%;
-    transform: rotate(20deg);
 }
 
 /* Kisten linke Wand */
@@ -321,34 +413,35 @@ h2 {
 
 /* Motorblock-Tisch Mitte */
 #cage2-box6 {
-    left: 39%;
-    top: 44%;
-    width: 22%;
-    height: 20%;
+    left: 41%;
+    top: 47%;
+    width: 20%;
+    height: 18%;
 }
 
 /* Grüne Maschine rechts */
 #cage2-box7 {
-    left: 80%;
+    left: 83%;
     top: 44%;
-    width: 17%;
-    height: 34%;
+    width: 12%;
+    height: 29%;
 }
 
 /* Rote Objekte + Fässer unten Mitte */
 #cage2-box8 {
     left: 35%;
-    top: 78%;
-    width: 40%;
-    height: 20%;
+    top: 81%;
+    width: 7%;
+    height: 12%;
 }
 
 /* Blauer Tank unten rechts */
 #cage2-box9 {
-    left: 72%;
-    top: 66%;
-    width: 13%;
-    height: 17%;
+    left: 65%;
+    top: 83%;
+    width: 11%;
+    height: 6%;
+    transform: rotate(30deg);
 }
 
 /* Gabelstabler */
@@ -361,18 +454,18 @@ h2 {
 
 /* Extra 2 */
 #cage2-box11 {
-    left: 45%;
-    top: 45%;
-    width: 10%;
-    height: 10%;
+    left: 13%;
+    top: 26%;
+    width: 8%;
+    height: 6%;
 }
 
 /* Extra 3 */
 #cage2-box12 {
-    left: 45%;
-    top: 45%;
+    left: 82%;
+    top: 75%;
     width: 10%;
-    height: 10%;
+    height: 18%;
 }
 
 #lock-screen1 {
@@ -547,7 +640,7 @@ h2 {
 #e-button{
     position: absolute;
     bottom: 16rem;
-    right: 3rem;;
+    right: 3rem;
     background-color: rgba(0,0,0,0.3);
     border-radius: 5%;
     padding: 0.5rem;
@@ -754,4 +847,128 @@ h2 {
 
 #level-menu-close:hover {
     transform: scale(1.1);
+}
+
+/* ---- Note-Paper 2 (Game-Screen 2) ---- */
+#note-paper2 {
+    width: 1.5rem;
+    height: auto;
+    position: absolute;
+    left: 74%;
+    top: 75%;
+}
+
+#note-paper2 img {
+    width: 100%;
+    height: auto;
+}
+
+#note-paper2-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#note-paper2-overlay img {
+    width: 35%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 8px;
+}
+
+#note-paper2-close {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #F9E9D1;
+    -webkit-text-stroke: 0px;
+    opacity: 0.7;
+    letter-spacing: 0.1rem;
+}
+
+/* ---- Schlüssel (Game-Screen 2) ---- */
+#key-item {
+    position: absolute;
+    left: 20%;
+    top: 20%;
+    width: 0.7rem;
+    height: auto;
+    cursor: default;
+}
+
+#key-item img {
+    width: 100%;
+    height: auto;
+}
+
+/* ---- Öl-Kanne (Game-Screen 2) ---- */
+#oil-item {
+    position: absolute;
+    left: 19%;
+    top: 74%;
+    width: 1.3rem;
+    height: auto;
+    cursor: default;
+}
+
+#oil-item img {
+    width: 100%;
+    height: auto;
+}
+
+/* ---- Falltür / Transition-Box 2 ---- */
+#transition-box2 {
+    position: absolute;
+    left: 80%;
+    top: 33%;
+    width: 8%;
+    height: 10%;
+    /* background-color: rgba(0, 255, 0, 0.4); */
+}
+
+/* ---- E-Button 2 (Note-Paper 2) ---- */
+#e-button2 {
+    position: absolute;
+    left: 71%;
+    top: 69%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5%;
+    padding: 0.5rem;
+}
+
+#e-button2 p {
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.1rem;
+    font-size: 1rem;
+    color: white;
+    -webkit-text-stroke: 0px;
+}
+
+/* ---- E-Button 3 (Falltür) ---- */
+#e-button3 {
+    position: absolute;
+    left: 77%;
+    top: 27%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5%;
+    padding: 0.5rem;
+}
+
+#e-button3 p {
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.1rem;
+    font-size: 1rem;
+    color: white;
+    -webkit-text-stroke: 0px;
+}
+
+#key-img{
+    width: 70%;
 }

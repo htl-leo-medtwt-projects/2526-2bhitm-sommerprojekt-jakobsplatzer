@@ -55,8 +55,26 @@ function isCollidingWithCage2() {
     );
 }
 
+function isCollidingWithCage3() {
+    return (
+        isColliding(PLAYER.box, cage3Box1, 0) ||
+        isColliding(PLAYER.box, cage3Box2, 0) ||
+        isColliding(PLAYER.box, cage3Box3, 0) ||
+        isColliding(PLAYER.box, cage3Box4, 0) ||
+        isColliding(PLAYER.box, cage3Box5, 0) ||
+        isColliding(PLAYER.box, cage3Box6, 0) ||
+        isColliding(PLAYER.box, cage3Box7, 0) ||
+        isColliding(PLAYER.box, cage3Box8, 0) ||
+        isColliding(PLAYER.box, cage3Box9, 0) ||
+        isColliding(PLAYER.box, cage3Box10, 0)
+    );
+}
+
 function isCollidingWithAnyCage() {
     // Je nach aktivem Screen die passenden Hindernisse prüfen
+    if (game3.style.display !== 'none') {
+        return isCollidingWithCage3();
+    }
     if (game2.style.display !== 'none') {
         return isCollidingWithCage2();
     }
@@ -137,17 +155,52 @@ function movePlayer(dx, dy, direction) {
         }
     }
 
-    //note-paper
-    if(isColliding(PLAYER.box, notePaper, 20)){
-        ebutton.style.display = '';
-    }
-    if(!isColliding(PLAYER.box, notePaper, 20)){
-        ebutton.style.display = 'none';
+    // Game-Screen 1: Note-Paper + Transition
+    if (game2.style.display === 'none' && game3.style.display === 'none') {
+        if (isColliding(PLAYER.box, notePaper, 20)) {
+            ebutton.style.display = '';
+        } else {
+            ebutton.style.display = 'none';
+        }
+
+        if (isColliding(PLAYER.box, transition1, 10)) {
+            Game1ToLock1();
+        }
     }
 
-    //password-input
-    if (isColliding(PLAYER.box, transition1, 10)) {
-        Game1ToLock1();
+    // Game-Screen 2: Note-Paper2, Öl einsammeln, Falltür
+    if (game2.style.display !== 'none') {
+        // Note-Paper 2 → ebutton2
+        if (isColliding(PLAYER.box, notePaper2, 20)) {
+            ebutton2.style.display = 'block';
+        } else {
+            ebutton2.style.display = 'none';
+        }
+
+        // Schlüssel einsammeln
+        if (keyItem.style.display !== 'none' && isColliding(PLAYER.box, keyItem, 10)) {
+            keyItem.style.display = 'none';
+            inventoryItem1.innerHTML = '<img id="key-img" src="img/key.png" alt="key" class="inv-item-img">';
+        }
+
+        // Öl einsammeln
+        if (oilItem.style.display !== 'none' && isColliding(PLAYER.box, oilItem, 10)) {
+            oilItem.style.display = 'none';
+            inventoryItem2.innerHTML = '<img src="img/oil.png" alt="oil" class="inv-item-img">';
+        }
+
+        // Falltür – nur wenn Schlüssel UND Öl im Inventar → ebutton3
+        if (isColliding(PLAYER.box, transition2, 10)) {
+            const hasKey = inventoryItem1.innerHTML.includes('key.png');
+            const hasOil = inventoryItem2.innerHTML.includes('oil.png');
+            if (hasKey && hasOil) {
+                ebutton3.style.display = '';
+            } else {
+                ebutton3.style.display = 'none';
+            }
+        } else {
+            ebutton3.style.display = 'none';
+        }
     }
 }
 

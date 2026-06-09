@@ -17,6 +17,7 @@ let conWithChick3 = document.getElementById('con-with-chick3');
 let conWithChick4 = document.getElementById('con-with-chick4');
 let game1 = document.getElementById('game-screen1');
 let game2 = document.getElementById('game-screen2');
+let game3 = document.getElementById('game-screen3');
 let inventoryBeam = document.getElementById('inventory-beam-container');
 let transition1 = document.getElementById('transition-box1');
 let lockScreen1 = document.getElementById('lock-screen1');
@@ -28,6 +29,16 @@ let cageBox3 = document.getElementById('cage-box3');
 let cageBox4 = document.getElementById('cage-box4');
 let cageBox5 = document.getElementById('cage-box5');
 let cageBox6 = document.getElementById('cage-box6');
+let cage3Box1 = document.getElementById('cage3-box1');
+let cage3Box2 = document.getElementById('cage3-box2');
+let cage3Box3 = document.getElementById('cage3-box3');
+let cage3Box4 = document.getElementById('cage3-box4');
+let cage3Box5 = document.getElementById('cage3-box5');
+let cage3Box6 = document.getElementById('cage3-box6');
+let cage3Box7 = document.getElementById('cage3-box7');
+let cage3Box8 = document.getElementById('cage3-box8');
+let cage3Box9 = document.getElementById('cage3-box9');
+let cage3Box10 = document.getElementById('cage3-box10');
 let cage2Box1 = document.getElementById('cage2-box1');
 let cage2Box2 = document.getElementById('cage2-box2');
 let cage2Box3 = document.getElementById('cage2-box3');
@@ -57,11 +68,20 @@ let ebutton = document.getElementById('e-button');
 let notePaperOverlay = document.getElementById('note-paper-overlay');
 let inventoryOverlay = document.getElementById('inventory-overlay');
 let hay = document.getElementById('hay');
+let notePaper2 = document.getElementById('note-paper2');
+let notePaper2Overlay = document.getElementById('note-paper2-overlay');
+let keyItem = document.getElementById('key-item');
+let oilItem = document.getElementById('oil-item');
+let transition2 = document.getElementById('transition-box2');
+let ebutton2 = document.getElementById('e-button2');
+let ebutton3 = document.getElementById('e-button3');
 let cp1 = false;
 let cp2 = false;
 let cp3 = false;
 let notePaperOpen = false;
+let notePaper2Open = false;
 let inventoryOpen = false;
+let isGameRunning = false;
 
 function openNotePaper() {
     notePaperOpen = true;
@@ -73,6 +93,19 @@ function closeNotePaper() {
     notePaperOpen = false;
     isGameRunning = true;
     notePaperOverlay.style.display = 'none';
+    _loopId++; gameLoop(_loopId);
+}
+
+function openNotePaper2() {
+    notePaper2Open = true;
+    isGameRunning = false;
+    notePaper2Overlay.style.display = 'flex';
+}
+
+function closeNotePaper2() {
+    notePaper2Open = false;
+    isGameRunning = true;
+    notePaper2Overlay.style.display = 'none';
     _loopId++; gameLoop(_loopId);
 }
 
@@ -101,7 +134,7 @@ function closeInventory() {
 }
 
 function inGameScreen() {
-    return game1.style.display !== 'none' || game2.style.display !== 'none';
+    return game1.style.display !== 'none' || game2.style.display !== 'none' || game3.style.display !== 'none';
 }
 
 let levelMenuOverlay = document.getElementById('level-menu-overlay');
@@ -149,14 +182,20 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'e' || e.key === 'E') {
         if (inventoryOpen) {
             closeInventory();
+        } else if (ebutton3.style.display !== 'none') {
+            // Falltür öffnen → Game-Screen 3
+            Game2ToGame3();
+        } else if (ebutton2.style.display !== 'none' && !notePaper2Open) {
+            openNotePaper2();
         } else if (ebutton.style.display !== 'none' && !notePaperOpen) {
             openNotePaper();
-        } else if (!notePaperOpen && inGameScreen()) {
+        } else if (!notePaperOpen && !notePaper2Open && inGameScreen()) {
             openInventory();
         }
     }
     if (e.key === 'Escape') {
         if (levelMenuOverlay.style.display === 'flex') { closeLevelMenu(); return; }
+        if (notePaper2Open) { closeNotePaper2(); return; }
         if (notePaperOpen) closeNotePaper();
         if (inventoryOpen) closeInventory();
     }
@@ -171,8 +210,10 @@ conWithChick3.style.display = 'none';
 conWithChick4.style.display = 'none';
 game1.style.display = 'none';
 game2.style.display = 'none';
+game3.style.display = 'none';
 player.style.display = 'none';
 ebutton.style.display = 'none';
+ebutton2.style.display = 'none';
 hay.style.display= 'none';
 notePaper.style.display = 'none';
 
@@ -186,7 +227,7 @@ let levelFlags = { reachedG2: false, reachedG3: false };
 function saveGame(screen) {
     const data = {
         screen,
-        checkpoints: { ...collectedCheckpoints },
+        checkpoints: { cp1, cp2, cp3 },
         flags: { ...levelFlags },
         inventory: [
             inventoryItem1.innerHTML,
@@ -212,15 +253,23 @@ function restoreCheckpointsAndInventory(data) {
     if (!data.checkpoints) return;
     collectedCheckpoints = { ...data.checkpoints };
 
-    if (collectedCheckpoints.cp1) checkpoint1.style.display = 'none';
-    if (collectedCheckpoints.cp2) checkpoint2.style.display = 'none';
-    if (collectedCheckpoints.cp3) checkpoint3.style.display = 'none';
+    if (collectedCheckpoints.cp1) { checkpoint1.style.display = 'none'; cp1 = true; }
+    if (collectedCheckpoints.cp2) { checkpoint2.style.display = 'none'; cp2 = true; }
+    if (collectedCheckpoints.cp3) { checkpoint3.style.display = 'none'; cp3 = true; }
 
     if (data.inventory) {
         const items = [inventoryItem1, inventoryItem2, inventoryItem3,
                        inventoryItem4, inventoryItem5, inventoryItem6,
                        inventoryItem7, inventoryItem8, inventoryItem9];
         data.inventory.forEach((html, i) => { items[i].innerHTML = html; });
+
+        // Schlüssel ausblenden wenn bereits eingesammelt
+        const keyCollected = data.inventory.some(html => html.includes('key.png'));
+        if (keyCollected && keyItem) keyItem.style.display = 'none';
+
+        // Öl-Item ausblenden wenn bereits eingesammelt
+        const oilCollected = data.inventory.some(html => html.includes('oil.png'));
+        if (oilCollected && oilItem) oilItem.style.display = 'none';
     }
 }
 
@@ -277,6 +326,13 @@ function loadSave() {
             game2.style.display = '';
             player.style.display = '';
             inventoryBeam.style.display = '';
+            restoreCheckpointsAndInventory(data);
+            startGame(data.playerX, data.playerY);
+            break;
+        case 'game3':
+            game3.style.display = '';
+            player.style.display = '';
+            inventoryBeam.style.display = '';
             startGame(data.playerX, data.playerY);
             break;
     }
@@ -308,8 +364,10 @@ function backToHome() {
     conWithChick3.style.display = 'none';
     conWithChick4.style.display = 'none';
     game1.style.display = 'none';
+    game2.style.display = 'none';
+    game3.style.display = 'none';
     inventoryBeam.style.display = 'none';
-    spriteImg.style.display = 'none';
+    player.style.display = 'none';
     reset();
 }
 
@@ -392,6 +450,7 @@ passwordInput1.addEventListener('keydown', (e) => {
         PLAYER.box.style.left = '400px';
         PLAYER.box.style.top = '400px';
         clearInventory();
+        keyItem.style.display = '';
         levelFlags.reachedG2 = true;
         isGameRunning = true;
         saveGame('game2');
@@ -418,7 +477,9 @@ function Game1ToLock1(){
 }
 
 function currentGameScreen() {
-    return game2.style.display !== 'none' ? 'game2' : 'game1';
+    if (game3.style.display !== 'none') return 'game3';
+    if (game2.style.display !== 'none') return 'game2';
+    return 'game1';
 }
 
 window.addEventListener('beforeunload', () => {
@@ -442,6 +503,19 @@ function startGame(savedX, savedY) {
     if (!savedX) saveGame('game1');
     _loopId++;
     gameLoop(_loopId);
+}
+
+function Game2ToGame3() {
+    game2.style.display = 'none';
+    game3.style.display = '';
+    player.style.display = '';
+    inventoryBeam.style.display = '';
+    PLAYER.box.style.left = Math.round(window.innerWidth * 0.5) + 'px';
+    PLAYER.box.style.top = Math.round(window.innerHeight * 0.7) + 'px';
+    levelFlags.reachedG3 = true;
+    isGameRunning = true;
+    saveGame('game3');
+    _loopId++; gameLoop(_loopId);
 }
 
 // Continue-Button einblenden falls Spielstand vorhanden
