@@ -51,7 +51,11 @@ function isCollidingWithCage2() {
         isColliding(PLAYER.box, cage2Box9, 0) ||
         isColliding(PLAYER.box, cage2Box10, 0) ||
         isColliding(PLAYER.box, cage2Box11, 0) ||
-        isColliding(PLAYER.box, cage2Box12, 0)
+        isColliding(PLAYER.box, cage2Box12, 0) ||
+        isColliding(PLAYER.box, cage2Box13, 0) ||
+        isColliding(PLAYER.box, cage2Box14, 0) ||
+        isColliding(PLAYER.box, cage2Box15, 0) ||
+        isColliding(PLAYER.box, cage2Box16, 0)
     );
 }
 
@@ -66,7 +70,14 @@ function isCollidingWithCage3() {
         isColliding(PLAYER.box, cage3Box7, 0) ||
         isColliding(PLAYER.box, cage3Box8, 0) ||
         isColliding(PLAYER.box, cage3Box9, 0) ||
-        isColliding(PLAYER.box, cage3Box10, 0)
+        isColliding(PLAYER.box, cage3Box10, 0) ||
+        isColliding(PLAYER.box, cage3Box11, 0) ||
+        isColliding(PLAYER.box, cage3Box12, 0) ||
+        isColliding(PLAYER.box, cage3Box13, 0) ||
+        isColliding(PLAYER.box, cage3Box14, 0) ||
+        isColliding(PLAYER.box, cage3Box15, 0) ||
+        isColliding(PLAYER.box, cage3Box16, 0) ||
+        isColliding(PLAYER.box, cage3Box17, 0)
     );
 }
 
@@ -168,6 +179,36 @@ function movePlayer(dx, dy, direction) {
         }
     }
 
+    // Game-Screen 3: Items einsammeln + Ausgang
+    if (game3.style.display !== 'none') {
+        if (screwdriverItem.style.display !== 'none' && isColliding(PLAYER.box, screwdriverItem, 10)) {
+            screwdriverItem.style.display = 'none';
+            inventoryItem2.innerHTML = '<img src="img/screwdriver.avif" alt="screwdriver" class="inv-item-img">';
+        }
+        if (wrenchItem.style.display !== 'none' && isColliding(PLAYER.box, wrenchItem, 10)) {
+            wrenchItem.style.display = 'none';
+            inventoryItem3.innerHTML = '<img src="img/wrench.png" alt="wrench" class="inv-item-img">';
+        }
+        if (gasolineItem.style.display !== 'none' && isColliding(PLAYER.box, gasolineItem, 10)) {
+            gasolineItem.style.display = 'none';
+            inventoryItem4.innerHTML = '<img src="img/gasoline.png" alt="gasoline" class="inv-item-img">';
+        }
+        if (penItem.style.display !== 'none' && isColliding(PLAYER.box, penItem, 40)) {
+            ebutton5.style.display = 'block';
+        } else {
+            ebutton5.style.display = 'none';
+        }
+
+        if (isColliding(PLAYER.box, circuitPlan, 40)) {
+            ebutton4.style.display = 'block';
+        } else {
+            ebutton4.style.display = 'none';
+        }
+        if (transition3 && isColliding(PLAYER.box, transition3, 10)) {
+            Game3ToGame4();
+        }
+    }
+
     // Game-Screen 2: Note-Paper2, Öl einsammeln, Falltür
     if (game2.style.display !== 'none') {
         // Note-Paper 2 → ebutton2
@@ -189,7 +230,6 @@ function movePlayer(dx, dy, direction) {
             inventoryItem2.innerHTML = '<img src="img/oil.png" alt="oil" class="inv-item-img">';
         }
 
-        // Falltür – nur wenn Schlüssel UND Öl im Inventar → ebutton3
         if (isColliding(PLAYER.box, transition2, 10)) {
             const hasKey = inventoryItem1.innerHTML.includes('key.png');
             const hasOil = inventoryItem2.innerHTML.includes('oil.png');

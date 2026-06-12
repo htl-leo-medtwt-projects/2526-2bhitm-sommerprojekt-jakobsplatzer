@@ -12,7 +12,7 @@
 let _loopId = 0;
 
 function gameLoop(id) {
-    if (id !== _loopId) return; // veraltete Loop-Instanz abbrechen
+    if (id !== _loopId) return; 
     if (!isGameRunning) return;
 
     let dx = 0;

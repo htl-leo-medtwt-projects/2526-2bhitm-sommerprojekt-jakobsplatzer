@@ -2,7 +2,6 @@
 /// <reference path="spritegame_keyevents.js" />
 /// <reference path="spritegame_player.js" />
 
-// Define missing variables
 let GAME_CONFIG = {
     characterSpeed: 5,
     gameSpeed: 60
@@ -18,6 +17,7 @@ let conWithChick4 = document.getElementById('con-with-chick4');
 let game1 = document.getElementById('game-screen1');
 let game2 = document.getElementById('game-screen2');
 let game3 = document.getElementById('game-screen3');
+let game4 = document.getElementById('game-screen4');
 let inventoryBeam = document.getElementById('inventory-beam-container');
 let transition1 = document.getElementById('transition-box1');
 let lockScreen1 = document.getElementById('lock-screen1');
@@ -39,6 +39,13 @@ let cage3Box7 = document.getElementById('cage3-box7');
 let cage3Box8 = document.getElementById('cage3-box8');
 let cage3Box9 = document.getElementById('cage3-box9');
 let cage3Box10 = document.getElementById('cage3-box10');
+let cage3Box11 = document.getElementById('cage3-box11');
+let cage3Box12 = document.getElementById('cage3-box12');
+let cage3Box13 = document.getElementById('cage3-box13');
+let cage3Box14 = document.getElementById('cage3-box14');
+let cage3Box15 = document.getElementById('cage3-box15');
+let cage3Box16 = document.getElementById('cage3-box16');
+let cage3Box17 = document.getElementById('cage3-box17');
 let cage2Box1 = document.getElementById('cage2-box1');
 let cage2Box2 = document.getElementById('cage2-box2');
 let cage2Box3 = document.getElementById('cage2-box3');
@@ -51,6 +58,10 @@ let cage2Box9 = document.getElementById('cage2-box9');
 let cage2Box10 = document.getElementById('cage2-box10');
 let cage2Box11 = document.getElementById('cage2-box11');
 let cage2Box12 = document.getElementById('cage2-box12');
+let cage2Box13 = document.getElementById('cage2-box13');
+let cage2Box14 = document.getElementById('cage2-box14');
+let cage2Box15 = document.getElementById('cage2-box15');
+let cage2Box16 = document.getElementById('cage2-box16');
 let checkpoint1 = document.getElementById('checkpoint1');
 let checkpoint2 = document.getElementById('checkpoint2');
 let checkpoint3 = document.getElementById('checkpoint3');
@@ -73,13 +84,23 @@ let notePaper2Overlay = document.getElementById('note-paper2-overlay');
 let keyItem = document.getElementById('key-item');
 let oilItem = document.getElementById('oil-item');
 let transition2 = document.getElementById('transition-box2');
+let transition3 = document.getElementById('transition-box3');
+let screwdriverItem = document.getElementById('screwdriver-item');
+let wrenchItem = document.getElementById('wrench-item');
+let gasolineItem = document.getElementById('gasoline-item');
+let penItem = document.getElementById('pen-item');
 let ebutton2 = document.getElementById('e-button2');
 let ebutton3 = document.getElementById('e-button3');
+let ebutton4 = document.getElementById('e-button4');
+let ebutton5 = document.getElementById('e-button5');
+let circuitPlan = document.getElementById('circuit-plan');
+let circuitPlanOverlay = document.getElementById('circuit-plan-overlay');
 let cp1 = false;
 let cp2 = false;
 let cp3 = false;
 let notePaperOpen = false;
 let notePaper2Open = false;
+let circuitPlanOpen = false;
 let inventoryOpen = false;
 let isGameRunning = false;
 
@@ -106,6 +127,19 @@ function closeNotePaper2() {
     notePaper2Open = false;
     isGameRunning = true;
     notePaper2Overlay.style.display = 'none';
+    _loopId++; gameLoop(_loopId);
+}
+
+function openCircuitPlan() {
+    circuitPlanOpen = true;
+    isGameRunning = false;
+    circuitPlanOverlay.style.display = 'flex';
+}
+
+function closeCircuitPlan() {
+    circuitPlanOpen = false;
+    isGameRunning = true;
+    circuitPlanOverlay.style.display = 'none';
     _loopId++; gameLoop(_loopId);
 }
 
@@ -142,7 +176,6 @@ let levelMenuOverlay = document.getElementById('level-menu-overlay');
 function computeLevelProgress() {
     let p1 = 0, p2 = 0, p3 = 0;
 
-    // Level 1: 20% pro Checkpoint, 100% wenn Passwort richtig (game2 erreicht)
     if (levelFlags.reachedG2 || levelFlags.reachedG3) {
         p1 = 100;
     } else {
@@ -150,14 +183,12 @@ function computeLevelProgress() {
         p1 = c * 20;
     }
 
-    // Level 2: 100% wenn Level 3 erreicht, sonst 50% wenn gerade in Level 2
     if (levelFlags.reachedG3) {
         p2 = 100;
     } else if (levelFlags.reachedG2) {
         p2 = 50;
     }
 
-    // Level 3: noch nicht implementiert
     p3 = 0;
 
     return [p1, p2, p3];
@@ -183,18 +214,24 @@ document.addEventListener('keydown', (e) => {
         if (inventoryOpen) {
             closeInventory();
         } else if (ebutton3.style.display !== 'none') {
-            // Falltür öffnen → Game-Screen 3
             Game2ToGame3();
+        } else if (ebutton5.style.display !== 'none') {
+            penItem.style.display = 'none';
+            ebutton5.style.display = 'none';
+            inventoryItem5.innerHTML = '<img src="img/pen.avif" alt="pen" class="inv-item-img">';
+        } else if (ebutton4.style.display !== 'none' && !circuitPlanOpen) {
+            openCircuitPlan();
         } else if (ebutton2.style.display !== 'none' && !notePaper2Open) {
             openNotePaper2();
         } else if (ebutton.style.display !== 'none' && !notePaperOpen) {
             openNotePaper();
-        } else if (!notePaperOpen && !notePaper2Open && inGameScreen()) {
+        } else if (!notePaperOpen && !notePaper2Open && !circuitPlanOpen && inGameScreen()) {
             openInventory();
         }
     }
     if (e.key === 'Escape') {
         if (levelMenuOverlay.style.display === 'flex') { closeLevelMenu(); return; }
+        if (circuitPlanOpen) { closeCircuitPlan(); return; }
         if (notePaper2Open) { closeNotePaper2(); return; }
         if (notePaperOpen) closeNotePaper();
         if (inventoryOpen) closeInventory();
@@ -211,9 +248,16 @@ conWithChick4.style.display = 'none';
 game1.style.display = 'none';
 game2.style.display = 'none';
 game3.style.display = 'none';
+game4.style.display = 'none';
 player.style.display = 'none';
+screwdriverItem.style.display = 'none';
+wrenchItem.style.display = 'none';
+gasolineItem.style.display = 'none';
+penItem.style.display = 'none';
 ebutton.style.display = 'none';
 ebutton2.style.display = 'none';
+ebutton4.style.display = 'none';
+ebutton5.style.display = 'none';
 hay.style.display= 'none';
 notePaper.style.display = 'none';
 
@@ -333,7 +377,15 @@ function loadSave() {
             game3.style.display = '';
             player.style.display = '';
             inventoryBeam.style.display = '';
-            startGame(data.playerX, data.playerY);
+            restoreCheckpointsAndInventory(data);
+            if (!data.inventory || !data.inventory.some(h => h.includes('screwdriver'))) screwdriverItem.style.display = '';
+            if (!data.inventory || !data.inventory.some(h => h.includes('wrench'))) wrenchItem.style.display = '';
+            if (!data.inventory || !data.inventory.some(h => h.includes('gasoline'))) gasolineItem.style.display = '';
+            if (!data.inventory || !data.inventory.some(h => h.includes('pen'))) penItem.style.display = '';
+            startGame(
+                Math.round(window.innerWidth * 0.50) + 'px',
+                Math.round(window.innerHeight * 0.50) + 'px'
+            );
             break;
     }
 }
@@ -505,20 +557,33 @@ function startGame(savedX, savedY) {
     gameLoop(_loopId);
 }
 
+function Game3ToGame4() {
+    isGameRunning = false;
+    game3.style.display = 'none';
+    game4.style.display = '';
+    player.style.display = 'none';
+}
+
 function Game2ToGame3() {
     game2.style.display = 'none';
     game3.style.display = '';
+    ebutton3.style.display = 'none';
     player.style.display = '';
     inventoryBeam.style.display = '';
-    PLAYER.box.style.left = Math.round(window.innerWidth * 0.5) + 'px';
-    PLAYER.box.style.top = Math.round(window.innerHeight * 0.7) + 'px';
+    inventoryItem1.innerHTML = inventoryItem2.innerHTML;
+    inventoryItem2.innerHTML = '';
+    screwdriverItem.style.display = '';
+    wrenchItem.style.display = '';
+    gasolineItem.style.display = '';
+    penItem.style.display = '';
+    PLAYER.box.style.left = Math.round(window.innerWidth * 0.50) + 'px';
+    PLAYER.box.style.top = Math.round(window.innerHeight * 0.50) + 'px';
     levelFlags.reachedG3 = true;
     isGameRunning = true;
     saveGame('game3');
     _loopId++; gameLoop(_loopId);
 }
 
-// Continue-Button einblenden falls Spielstand vorhanden
 checkForSave();
 
 
