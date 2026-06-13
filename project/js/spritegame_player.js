@@ -77,7 +77,8 @@ function isCollidingWithCage3() {
         isColliding(PLAYER.box, cage3Box14, 0) ||
         isColliding(PLAYER.box, cage3Box15, 0) ||
         isColliding(PLAYER.box, cage3Box16, 0) ||
-        isColliding(PLAYER.box, cage3Box17, 0)
+        isColliding(PLAYER.box, cage3Box17, 0) ||
+        (!garageDoorOpen && isColliding(PLAYER.box, garageDoor, 0))
     );
 }
 
@@ -181,10 +182,6 @@ function movePlayer(dx, dy, direction) {
 
     // Game-Screen 3: Items einsammeln + Ausgang
     if (game3.style.display !== 'none') {
-        if (screwdriverItem.style.display !== 'none' && isColliding(PLAYER.box, screwdriverItem, 10)) {
-            screwdriverItem.style.display = 'none';
-            inventoryItem2.innerHTML = '<img src="img/screwdriver.avif" alt="screwdriver" class="inv-item-img">';
-        }
         if (wrenchItem.style.display !== 'none' && isColliding(PLAYER.box, wrenchItem, 10)) {
             wrenchItem.style.display = 'none';
             inventoryItem3.innerHTML = '<img src="img/wrench.png" alt="wrench" class="inv-item-img">';
@@ -193,7 +190,9 @@ function movePlayer(dx, dy, direction) {
             gasolineItem.style.display = 'none';
             inventoryItem4.innerHTML = '<img src="img/gasoline.png" alt="gasoline" class="inv-item-img">';
         }
-        if (penItem.style.display !== 'none' && isColliding(PLAYER.box, penItem, 40)) {
+        // Stift liegt in der Wand-Cage-Box → größere Toleranz, damit E erscheint,
+        // wenn der Spieler davor steht (Wand blockiert ihn vorher)
+        if (penItem.style.display !== 'none' && isColliding(PLAYER.box, penItem, 50)) {
             ebutton5.style.display = 'block';
         } else {
             ebutton5.style.display = 'none';
@@ -201,9 +200,36 @@ function movePlayer(dx, dy, direction) {
 
         if (isColliding(PLAYER.box, circuitPlan, 40)) {
             ebutton4.style.display = 'block';
+            fbutton.style.display = 'block';
         } else {
             ebutton4.style.display = 'none';
+            fbutton.style.display = 'none';
         }
+
+        // Aggregat: Tanken / Reparieren / Schmieren (Reihenfolge egal) → Starten
+        if (isColliding(PLAYER.box, aggregateBox, 40)) {
+            const label = aggregateLabel();
+            if (label) {
+                ebutton6.querySelector('p').textContent = label;
+                ebutton6.style.display = 'block';
+            } else {
+                ebutton6.style.display = 'none';
+            }
+        } else {
+            ebutton6.style.display = 'none';
+        }
+        // Aufzug am rechten Rand → ebutton7
+        if (isColliding(PLAYER.box, elevatorBox, 20)) {
+            ebutton7.style.display = 'block';
+        } else {
+            ebutton7.style.display = 'none';
+        }
+
+        // Offenes Garagentor → raus nach Game-Screen 4
+        if (garageDoorOpen && isColliding(PLAYER.box, transition4, 10)) {
+            Game3ToGame4();
+        }
+
         if (transition3 && isColliding(PLAYER.box, transition3, 10)) {
             Game3ToGame4();
         }

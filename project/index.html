@@ -104,7 +104,7 @@
                     <p class="level-percent" id="level-percent3">0%</p>
                 </div>
 
-                <p id="level-menu-close" onclick="closeLevelMenu()">Schließen</p>
+                <p id="level-menu-close" onclick="closeLevelMenu()">Close</p>
             </div>
         </div>
 
@@ -256,8 +256,15 @@
     </div>
 
     <div id="circuit-plan-overlay">
-        <img src="img/Circuit-diagram.png" alt="circuit-plan-large">
+        <img id="circuit-plan-img" src="img/Circuit-diagram.png" alt="circuit-plan-large">
+        <div id="draw-plan-button" onclick="drawWorkPlan()">Draw the work plan</div>
         <p id="circuit-plan-close">ESC</p>
+    </div>
+
+    <div id="control-cabinet-overlay">
+        <img id="control-cabinet-img" src="img/control-cabinet.jpeg" alt="control-cabinet-large">
+        <img id="button-down1" src="img/control-cabinet-button-down.jpg" alt="control-cabinet-button" onclick="toggleCabinetButton(this)">
+        <img id="button-down2" src="img/control-cabinet-button-down.jpg" alt="control-cabinet-button" onclick="toggleCabinetButton(this)">
     </div>
 
     <div id="game-screen2">
@@ -318,10 +325,6 @@
         <div id="cage3-box15" class="cage-box3"></div>
         <div id="cage3-box16" class="cage-box3"></div>
         <div id="cage3-box17" class="cage-box3"></div>
-        <div id="screwdriver-item">
-            <img src="img/screwdriver.avif" alt="screwdriver">
-        </div>
-
         <div id="wrench-item">
             <img src="img/wrench.png" alt="wrench">
         </div>
@@ -346,9 +349,40 @@
             <p>[E] - Open Circut Plan</p>
         </div>
 
+        <div id="f-button">
+            <p>[F] - Open Control Cabinet</p>
+        </div>
+
+        <div id="aggregate-box"></div>
+        <div id="e-button6">
+            <p>[E] - Refuel</p>
+        </div>
+
+        <div id="elevator-box"></div>
+        <div id="e-button7">
+            <p>[E] - Open Garage Door Switch</p>
+        </div>
+
+        <div id="garage-door"></div>
+        <div id="transition-box4"></div>
+
     <!--<div id="transition-box3"></div> -->
     </div>
-    <div id="game-screen4"></div>
+
+    <div id="elevator-overlay">
+        <div id="elevator-wrapper">
+            <img id="elevator-img" src="img/elevator.png" alt="elevator-large">
+            <div id="elevator-up" onclick="elevatorUp()"></div>
+            <div id="elevator-down" onclick="elevatorDown()"></div>
+        </div>
+    </div>
+
+    <div id="game-screen4">
+        <h1 id="game4-text">Wolly ist wieder bei ihrer Herde</h1>
+        <div id="restart-button" onclick="restartGame()">
+            <p>Restart</p>
+        </div>
+    </div>
 </body>
 
 </html>

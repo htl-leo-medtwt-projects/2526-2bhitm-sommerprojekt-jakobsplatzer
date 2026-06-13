@@ -85,7 +85,6 @@ let keyItem = document.getElementById('key-item');
 let oilItem = document.getElementById('oil-item');
 let transition2 = document.getElementById('transition-box2');
 let transition3 = document.getElementById('transition-box3');
-let screwdriverItem = document.getElementById('screwdriver-item');
 let wrenchItem = document.getElementById('wrench-item');
 let gasolineItem = document.getElementById('gasoline-item');
 let penItem = document.getElementById('pen-item');
@@ -95,12 +94,34 @@ let ebutton4 = document.getElementById('e-button4');
 let ebutton5 = document.getElementById('e-button5');
 let circuitPlan = document.getElementById('circuit-plan');
 let circuitPlanOverlay = document.getElementById('circuit-plan-overlay');
+let circuitPlanImg = document.getElementById('circuit-plan-img');
+let fbutton = document.getElementById('f-button');
+let controlCabinetOverlay = document.getElementById('control-cabinet-overlay');
+let drawPlanButton = document.getElementById('draw-plan-button');
+let workPlanDrawn = false;
+let aggregateBox = document.getElementById('aggregate-box');
+let ebutton6 = document.getElementById('e-button6');
+let elevatorBox = document.getElementById('elevator-box');
+let ebutton7 = document.getElementById('e-button7');
+let elevatorOverlay = document.getElementById('elevator-overlay');
+let garageDoor = document.getElementById('garage-door');
+let transition4 = document.getElementById('transition-box4');
+let cabinetButton1 = document.getElementById('button-down1');
+let cabinetButton2 = document.getElementById('button-down2');
+let garageDoorOpen = false;
+// Reihenfolge egal – drei unabhängige Schritte + gestartet
+let engineTanked = false;
+let engineRepaired = false;
+let engineLubricated = false;
+let engineStarted = false;
 let cp1 = false;
 let cp2 = false;
 let cp3 = false;
 let notePaperOpen = false;
 let notePaper2Open = false;
 let circuitPlanOpen = false;
+let controlCabinetOpen = false;
+let elevatorOpen = false;
 let inventoryOpen = false;
 let isGameRunning = false;
 
@@ -133,7 +154,125 @@ function closeNotePaper2() {
 function openCircuitPlan() {
     circuitPlanOpen = true;
     isGameRunning = false;
+    // Button nur zeigen, wenn Stift im Inventar (Slot 5) und Plan noch nicht gezeichnet
+    const hasPen = inventoryItem5.innerHTML.includes('pen');
+    drawPlanButton.style.display = (hasPen && !workPlanDrawn) ? 'block' : 'none';
     circuitPlanOverlay.style.display = 'flex';
+}
+
+function drawWorkPlan() {
+    workPlanDrawn = true;
+    circuitPlanImg.src = 'img/Circuit-diagram2.png';
+    drawPlanButton.style.display = 'none';
+    // Stift wird verbraucht → aus dem Inventar-Beam entfernen
+    inventoryItem5.innerHTML = '';
+}
+
+function toggleCabinetButton(img) {
+    if (img.src.includes('button-down')) {
+        img.src = 'img/control-cabinet-button-up.jpg';
+    } else {
+        img.src = 'img/control-cabinet-button-down.jpg';
+    }
+}
+
+// Beide Sicherungen im Schaltkasten oben (Schalter in "up"-Stellung)?
+function bothFusesUp() {
+    return cabinetButton1.src.includes('button-up') &&
+           cabinetButton2.src.includes('button-up');
+}
+
+function elevatorUp() {
+    // Nur wenn Aggregat fertig (gestartet) UND beide Sicherungen oben sind
+    if (engineStarted && bothFusesUp()) {
+        garageDoorOpen = true;
+        garageDoor.style.display = 'none'; // Tor öffnet sich
+        closeElevator();
+    }
+}
+
+function elevatorDown() {
+    // Klick auf den Runter-Pfeil – Aktion folgt noch
+}
+
+function restartGame() {
+    deleteSave();
+    location.reload();
+}
+
+function openElevator() {
+    elevatorOpen = true;
+    isGameRunning = false;
+    elevatorOverlay.style.display = 'flex';
+}
+
+function closeElevator() {
+    elevatorOpen = false;
+    isGameRunning = true;
+    elevatorOverlay.style.display = 'none';
+    _loopId++; gameLoop(_loopId);
+}
+
+function openControlCabinet() {
+    controlCabinetOpen = true;
+    isGameRunning = false;
+    controlCabinetOverlay.style.display = 'flex';
+}
+
+function closeControlCabinet() {
+    controlCabinetOpen = false;
+    isGameRunning = true;
+    controlCabinetOverlay.style.display = 'none';
+    _loopId++; gameLoop(_loopId);
+}
+
+function inventoryHas(substr) {
+    return [inventoryItem1, inventoryItem2, inventoryItem3,
+            inventoryItem4, inventoryItem5, inventoryItem6,
+            inventoryItem7, inventoryItem8, inventoryItem9]
+        .some(it => it.innerHTML.includes(substr));
+}
+
+function removeFromInventory(substr) {
+    [inventoryItem1, inventoryItem2, inventoryItem3,
+     inventoryItem4, inventoryItem5, inventoryItem6,
+     inventoryItem7, inventoryItem8, inventoryItem9]
+        .forEach(it => { if (it.innerHTML.includes(substr)) it.innerHTML = ''; });
+}
+
+function aggregateLabel() {
+    if (!engineTanked && inventoryHas('gasoline'))   return '[E] - Refuel';
+    if (!engineRepaired && inventoryHas('wrench'))   return '[E] - Repair';
+    if (!engineLubricated && inventoryHas('oil.png')) return '[E] - Lubricate';
+    if (engineTanked && engineRepaired && engineLubricated && !engineStarted) return '[E] - Start';
+    return null;
+}
+
+function advanceEngine() {
+    if (!engineTanked && inventoryHas('gasoline')) {
+        engineTanked = true;
+        removeFromInventory('gasoline');
+    } else if (!engineRepaired && inventoryHas('wrench')) {
+        engineRepaired = true;
+        removeFromInventory('wrench'); // Schraubenschlüssel wird beim Reparieren verbraucht
+    } else if (!engineLubricated && inventoryHas('oil.png')) {
+        engineLubricated = true;
+        removeFromInventory('oil.png');
+    } else if (engineTanked && engineRepaired && engineLubricated && !engineStarted) {
+        engineStarted = true;
+        // Aggregat gestartet – aktuell passiert noch nichts weiter
+    } else {
+        return; // nichts zu tun – kein State-Wechsel
+    }
+    saveGame('game3');
+    // Button direkt aktualisieren (Spieler steht noch davor, Loop läuft nicht)
+    const label = aggregateLabel();
+    if (label) {
+        ebutton6.querySelector('p').textContent = label;
+        ebutton6.style.display = 'block';
+    } else {
+        ebutton6.style.display = 'none';
+    }
 }
 
 function closeCircuitPlan() {
@@ -189,7 +328,14 @@ function computeLevelProgress() {
         p2 = 50;
     }
 
-    p3 = 0;
+    if (levelFlags.reachedG3) {
+        if (engineStarted) {
+            p3 = 100;
+        } else {
+            let steps = (engineTanked ? 1 : 0) + (engineRepaired ? 1 : 0) + (engineLubricated ? 1 : 0);
+            p3 = steps * 25;
+        }
+    }
 
     return [p1, p2, p3];
 }
@@ -219,18 +365,31 @@ document.addEventListener('keydown', (e) => {
             penItem.style.display = 'none';
             ebutton5.style.display = 'none';
             inventoryItem5.innerHTML = '<img src="img/pen.avif" alt="pen" class="inv-item-img">';
+        } else if (ebutton6.style.display !== 'none') {
+            advanceEngine();
         } else if (ebutton4.style.display !== 'none' && !circuitPlanOpen) {
             openCircuitPlan();
+        } else if (ebutton7.style.display !== 'none' && !elevatorOpen) {
+            openElevator();
         } else if (ebutton2.style.display !== 'none' && !notePaper2Open) {
             openNotePaper2();
         } else if (ebutton.style.display !== 'none' && !notePaperOpen) {
             openNotePaper();
-        } else if (!notePaperOpen && !notePaper2Open && !circuitPlanOpen && inGameScreen()) {
+        } else if (!notePaperOpen && !notePaper2Open && !circuitPlanOpen && !controlCabinetOpen && !elevatorOpen && inGameScreen()) {
             openInventory();
+        }
+    }
+    if (e.key === 'f' || e.key === 'F') {
+        if (controlCabinetOpen) {
+            closeControlCabinet();
+        } else if (fbutton.style.display !== 'none') {
+            openControlCabinet();
         }
     }
     if (e.key === 'Escape') {
         if (levelMenuOverlay.style.display === 'flex') { closeLevelMenu(); return; }
+        if (elevatorOpen) { closeElevator(); return; }
+        if (controlCabinetOpen) { closeControlCabinet(); return; }
         if (circuitPlanOpen) { closeCircuitPlan(); return; }
         if (notePaper2Open) { closeNotePaper2(); return; }
         if (notePaperOpen) closeNotePaper();
@@ -250,14 +409,16 @@ game2.style.display = 'none';
 game3.style.display = 'none';
 game4.style.display = 'none';
 player.style.display = 'none';
-screwdriverItem.style.display = 'none';
 wrenchItem.style.display = 'none';
 gasolineItem.style.display = 'none';
 penItem.style.display = 'none';
 ebutton.style.display = 'none';
 ebutton2.style.display = 'none';
 ebutton4.style.display = 'none';
+fbutton.style.display = 'none';
+ebutton7.style.display = 'none';
 ebutton5.style.display = 'none';
+ebutton6.style.display = 'none';
 hay.style.display= 'none';
 notePaper.style.display = 'none';
 
@@ -273,6 +434,8 @@ function saveGame(screen) {
         screen,
         checkpoints: { cp1, cp2, cp3 },
         flags: { ...levelFlags },
+        workPlanDrawn,
+        engine: { engineTanked, engineRepaired, engineLubricated, engineStarted },
         inventory: [
             inventoryItem1.innerHTML,
             inventoryItem2.innerHTML,
@@ -294,6 +457,21 @@ function saveGame(screen) {
 
 function restoreCheckpointsAndInventory(data) {
     if (data.flags) levelFlags = { ...levelFlags, ...data.flags };
+
+    // Schaltplan-Zustand wiederherstellen
+    if (data.workPlanDrawn) {
+        workPlanDrawn = true;
+        circuitPlanImg.src = 'img/Circuit-diagram2.png';
+    }
+
+    // Aggregat-Fortschritt wiederherstellen
+    if (data.engine) {
+        engineTanked = !!data.engine.engineTanked;
+        engineRepaired = !!data.engine.engineRepaired;
+        engineLubricated = !!data.engine.engineLubricated;
+        engineStarted = !!data.engine.engineStarted;
+    }
+
     if (!data.checkpoints) return;
     collectedCheckpoints = { ...data.checkpoints };
 
@@ -378,14 +556,20 @@ function loadSave() {
             player.style.display = '';
             inventoryBeam.style.display = '';
             restoreCheckpointsAndInventory(data);
-            if (!data.inventory || !data.inventory.some(h => h.includes('screwdriver'))) screwdriverItem.style.display = '';
-            if (!data.inventory || !data.inventory.some(h => h.includes('wrench'))) wrenchItem.style.display = '';
-            if (!data.inventory || !data.inventory.some(h => h.includes('gasoline'))) gasolineItem.style.display = '';
-            if (!data.inventory || !data.inventory.some(h => h.includes('pen'))) penItem.style.display = '';
+            // Item nur respawnen, wenn weder im Inventar noch bereits verbraucht
+            if ((!data.inventory || !data.inventory.some(h => h.includes('wrench'))) && !engineRepaired) wrenchItem.style.display = '';
+            if ((!data.inventory || !data.inventory.some(h => h.includes('gasoline'))) && !engineTanked) gasolineItem.style.display = '';
+            if ((!data.inventory || !data.inventory.some(h => h.includes('pen'))) && !workPlanDrawn) penItem.style.display = '';
             startGame(
                 Math.round(window.innerWidth * 0.50) + 'px',
                 Math.round(window.innerHeight * 0.50) + 'px'
             );
+            break;
+        case 'game4':
+            game4.style.display = '';
+            player.style.display = 'none';
+            inventoryBeam.style.display = 'none';
+            homeButton.style.display = 'none';
             break;
     }
 }
@@ -406,7 +590,7 @@ function checkForSave() {
 }
 
 function backToHome() {
-    if (!confirm('Wirklich zum Start zurück? Der Spielstand wird gelöscht.')) return;
+    if (!confirm('Really return to the start? Your save will be deleted.')) return;
     deleteSave();
     startSection.style.display = '';
     homeButton.style.display = 'none';
@@ -499,8 +683,8 @@ passwordInput1.addEventListener('keydown', (e) => {
         game1.style.display = 'none';
         game2.style.display = '';
         player.style.display = '';
-        PLAYER.box.style.left = '400px';
-        PLAYER.box.style.top = '400px';
+        PLAYER.box.style.left = Math.round(window.innerWidth * 0.70) + 'px';
+        PLAYER.box.style.top = Math.round(window.innerHeight * 0.70) + 'px';
         clearInventory();
         keyItem.style.display = '';
         levelFlags.reachedG2 = true;
@@ -562,6 +746,9 @@ function Game3ToGame4() {
     game3.style.display = 'none';
     game4.style.display = '';
     player.style.display = 'none';
+    inventoryBeam.style.display = 'none';
+    homeButton.style.display = 'none';
+    saveGame('game4');
 }
 
 function Game2ToGame3() {
@@ -572,7 +759,6 @@ function Game2ToGame3() {
     inventoryBeam.style.display = '';
     inventoryItem1.innerHTML = inventoryItem2.innerHTML;
     inventoryItem2.innerHTML = '';
-    screwdriverItem.style.display = '';
     wrenchItem.style.display = '';
     gasolineItem.style.display = '';
     penItem.style.display = '';
