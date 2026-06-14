@@ -1,9 +1,3 @@
-/***********************************
- * SCRIPT REFERENCES
- ***********************************/
-/// <reference path="spritegame_detectCollisions.js" />
-/// <reference path="spritegame_keyevents.js" />
-
 let maxTop = 920;
 let maxLeft = 1370;
 let lastDirection = 'down';
@@ -19,14 +13,6 @@ let PLAYER = {
     coinCount: 0
 }
 
-/***********************************
- * MOVE
- * **********************************/
-/**
- * @param {number} dx - player x move offset in pixel
- * @param {number} dy - player y move offset in pixel
- * @param {number} dr - player heading direction (-1: look left || 1: look right)
- */
 function isCollidingWithCage() {
     return (
         isColliding(PLAYER.box, cageBox1, 0) ||
@@ -83,7 +69,6 @@ function isCollidingWithCage3() {
 }
 
 function isCollidingWithAnyCage() {
-    // Je nach aktivem Screen die passenden Hindernisse prüfen
     if (game3.style.display !== 'none') {
         return isCollidingWithCage3();
     }
@@ -109,52 +94,49 @@ function movePlayer(dx, dy, direction) {
     let nextX = parseFloat(oldLeft) + dx;
     let nextY = parseFloat(oldTop) + dy;
 
-    // Randbegrenzung
     const screenW = window.innerWidth;
     const screenH = window.innerHeight;
     const playerSize = 64;
-    const marginX = 80;  // Abstand von links/rechts
-    const marginY = 0;   // Abstand von oben/unten
+    const marginX = 80;
+    const marginY = 0;
 
-    // X-Achse prüfen
     PLAYER.box.style.left = nextX + 'px';
     if (isCollidingWithAnyCage() || nextX < marginX || nextX + playerSize > screenW - marginX) {
         PLAYER.box.style.left = oldLeft;
     }
 
-    // Y-Achse prüfen
     PLAYER.box.style.top = nextY + 'px';
     if (isCollidingWithAnyCage() || nextY < marginY || nextY + playerSize > screenH - marginY) {
         PLAYER.box.style.top = oldTop;
     }
 
-    // Richtung merken
     if (direction) {
         PLAYER.spriteDirection = direction;
     }
 
-    // Spiegeln nur für links/rechts
     if (direction === 'left') {
         PLAYER.box.style.transform = 'scaleX(-1)';
     } else if (direction === 'right') {
         PLAYER.box.style.transform = 'scaleX(1)';
     }
-    //Game-Screen1
-    //checkpoints
+
     if(isColliding(PLAYER.box, checkpoint1, 10)){
         checkpoint1.style.display = 'none';
         inventoryItem1.innerHTML = '2';
         cp1 = true;
+        playItemSound();
     }
     if(isColliding(PLAYER.box, checkpoint2, 10)){
         checkpoint2.style.display = 'none';
         inventoryItem2.innerHTML = '7';
         cp2 = true;
-    }    
+        playItemSound();
+    }
     if(isColliding(PLAYER.box, checkpoint3, 10)){
         checkpoint3.style.display = 'none';
         inventoryItem3.innerHTML = '4';
         cp3 = true;
+        playItemSound();
     }
 
     if(checkCheckpoints()){
@@ -167,7 +149,6 @@ function movePlayer(dx, dy, direction) {
         }
     }
 
-    // Game-Screen 1: Note-Paper + Transition
     if (game2.style.display === 'none' && game3.style.display === 'none') {
         if (isColliding(PLAYER.box, notePaper, 20)) {
             ebutton.style.display = '';
@@ -180,18 +161,17 @@ function movePlayer(dx, dy, direction) {
         }
     }
 
-    // Game-Screen 3: Items einsammeln + Ausgang
     if (game3.style.display !== 'none') {
         if (wrenchItem.style.display !== 'none' && isColliding(PLAYER.box, wrenchItem, 10)) {
             wrenchItem.style.display = 'none';
             inventoryItem3.innerHTML = '<img src="img/wrench.png" alt="wrench" class="inv-item-img">';
+            playItemSound();
         }
         if (gasolineItem.style.display !== 'none' && isColliding(PLAYER.box, gasolineItem, 10)) {
             gasolineItem.style.display = 'none';
             inventoryItem4.innerHTML = '<img src="img/gasoline.png" alt="gasoline" class="inv-item-img">';
+            playItemSound();
         }
-        // Stift liegt in der Wand-Cage-Box → größere Toleranz, damit E erscheint,
-        // wenn der Spieler davor steht (Wand blockiert ihn vorher)
         if (penItem.style.display !== 'none' && isColliding(PLAYER.box, penItem, 50)) {
             ebutton5.style.display = 'block';
         } else {
@@ -206,7 +186,6 @@ function movePlayer(dx, dy, direction) {
             fbutton.style.display = 'none';
         }
 
-        // Aggregat: Tanken / Reparieren / Schmieren (Reihenfolge egal) → Starten
         if (isColliding(PLAYER.box, aggregateBox, 40)) {
             const label = aggregateLabel();
             if (label) {
@@ -218,14 +197,13 @@ function movePlayer(dx, dy, direction) {
         } else {
             ebutton6.style.display = 'none';
         }
-        // Aufzug am rechten Rand → ebutton7
+
         if (isColliding(PLAYER.box, elevatorBox, 20)) {
             ebutton7.style.display = 'block';
         } else {
             ebutton7.style.display = 'none';
         }
 
-        // Offenes Garagentor → raus nach Game-Screen 4
         if (garageDoorOpen && isColliding(PLAYER.box, transition4, 10)) {
             Game3ToGame4();
         }
@@ -235,25 +213,23 @@ function movePlayer(dx, dy, direction) {
         }
     }
 
-    // Game-Screen 2: Note-Paper2, Öl einsammeln, Falltür
     if (game2.style.display !== 'none') {
-        // Note-Paper 2 → ebutton2
         if (isColliding(PLAYER.box, notePaper2, 20)) {
             ebutton2.style.display = 'block';
         } else {
             ebutton2.style.display = 'none';
         }
 
-        // Schlüssel einsammeln
         if (keyItem.style.display !== 'none' && isColliding(PLAYER.box, keyItem, 10)) {
             keyItem.style.display = 'none';
             inventoryItem1.innerHTML = '<img id="key-img" src="img/key.png" alt="key" class="inv-item-img">';
+            playItemSound();
         }
 
-        // Öl einsammeln
         if (oilItem.style.display !== 'none' && isColliding(PLAYER.box, oilItem, 10)) {
             oilItem.style.display = 'none';
             inventoryItem2.innerHTML = '<img src="img/oil.png" alt="oil" class="inv-item-img">';
+            playItemSound();
         }
 
         if (isColliding(PLAYER.box, transition2, 10)) {
@@ -297,4 +273,3 @@ function resetAnimation() {
     PLAYER.spriteImgNumber = 0;
     PLAYER.spriteImg.style.right = '0px';
 }
-

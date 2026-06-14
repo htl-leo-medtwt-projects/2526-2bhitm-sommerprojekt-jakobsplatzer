@@ -1,19 +1,8 @@
-/***********************************
- * SCRIPT REFERENCES
- ***********************************/
-/// <reference path="spritegame_detectCollisions.js" />
-/// <reference path="spritegame_keyevents.js" />
-/// <reference path="spritegame_player.js" />
-/// <reference path="spritegame_main.js" />
-
-/***********************************
- * GAME LOOP
- * **********************************/
 let _loopId = 0;
 
 function gameLoop(id) {
-    if (id !== _loopId) return; 
-    if (!isGameRunning) return;
+    if (id !== _loopId) return;
+    if (!isGameRunning) { stopSteps(); return; }
 
     let dx = 0;
     let dy = 0;
@@ -57,10 +46,11 @@ function gameLoop(id) {
 
         movePlayer(dx, dy);
         animatePlayer();
+        startSteps();
     } else {
         resetAnimation();
+        stopSteps();
     }
 
     setTimeout(() => gameLoop(id), 1000 / GAME_CONFIG.gameSpeed);
 }
-

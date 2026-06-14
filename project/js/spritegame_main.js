@@ -1,7 +1,3 @@
-/// <reference path="spritegame_detectCollisions.js" />
-/// <reference path="spritegame_keyevents.js" />
-/// <reference path="spritegame_player.js" />
-
 let GAME_CONFIG = {
     characterSpeed: 5,
     gameSpeed: 60
@@ -109,7 +105,6 @@ let transition4 = document.getElementById('transition-box4');
 let cabinetButton1 = document.getElementById('button-down1');
 let cabinetButton2 = document.getElementById('button-down2');
 let garageDoorOpen = false;
-// Reihenfolge egal – drei unabhängige Schritte + gestartet
 let engineTanked = false;
 let engineRepaired = false;
 let engineLubricated = false;
@@ -154,21 +149,21 @@ function closeNotePaper2() {
 function openCircuitPlan() {
     circuitPlanOpen = true;
     isGameRunning = false;
-    // Button nur zeigen, wenn Stift im Inventar (Slot 5) und Plan noch nicht gezeichnet
     const hasPen = inventoryItem5.innerHTML.includes('pen');
     drawPlanButton.style.display = (hasPen && !workPlanDrawn) ? 'block' : 'none';
     circuitPlanOverlay.style.display = 'flex';
 }
 
 function drawWorkPlan() {
+    playClick();
     workPlanDrawn = true;
     circuitPlanImg.src = 'img/Circuit-diagram2.png';
     drawPlanButton.style.display = 'none';
-    // Stift wird verbraucht → aus dem Inventar-Beam entfernen
     inventoryItem5.innerHTML = '';
 }
 
 function toggleCabinetButton(img) {
+    playFuseSound();
     if (img.src.includes('button-down')) {
         img.src = 'img/control-cabinet-button-up.jpg';
     } else {
@@ -176,26 +171,27 @@ function toggleCabinetButton(img) {
     }
 }
 
-// Beide Sicherungen im Schaltkasten oben (Schalter in "up"-Stellung)?
 function bothFusesUp() {
     return cabinetButton1.src.includes('button-up') &&
            cabinetButton2.src.includes('button-up');
 }
 
 function elevatorUp() {
-    // Nur wenn Aggregat fertig (gestartet) UND beide Sicherungen oben sind
+    playClick();
     if (engineStarted && bothFusesUp()) {
         garageDoorOpen = true;
-        garageDoor.style.display = 'none'; // Tor öffnet sich
+        garageDoor.style.display = 'none';
+        playGarageSound();
         closeElevator();
     }
 }
 
 function elevatorDown() {
-    // Klick auf den Runter-Pfeil – Aktion folgt noch
+    playClick();
 }
 
 function restartGame() {
+    playClick();
     deleteSave();
     location.reload();
 }
@@ -254,18 +250,16 @@ function advanceEngine() {
         removeFromInventory('gasoline');
     } else if (!engineRepaired && inventoryHas('wrench')) {
         engineRepaired = true;
-        removeFromInventory('wrench'); // Schraubenschlüssel wird beim Reparieren verbraucht
+        removeFromInventory('wrench');
     } else if (!engineLubricated && inventoryHas('oil.png')) {
         engineLubricated = true;
         removeFromInventory('oil.png');
     } else if (engineTanked && engineRepaired && engineLubricated && !engineStarted) {
         engineStarted = true;
-        // Aggregat gestartet – aktuell passiert noch nichts weiter
     } else {
-        return; // nichts zu tun – kein State-Wechsel
+        return;
     }
     saveGame('game3');
-    // Button direkt aktualisieren (Spieler steht noch davor, Loop läuft nicht)
     const label = aggregateLabel();
     if (label) {
         ebutton6.querySelector('p').textContent = label;
@@ -341,6 +335,7 @@ function computeLevelProgress() {
 }
 
 function openLevelMenu() {
+    playClick();
     const [p1, p2, p3] = computeLevelProgress();
     document.getElementById('level-fill1').style.width = p1 + '%';
     document.getElementById('level-fill2').style.width = p2 + '%';
@@ -352,6 +347,7 @@ function openLevelMenu() {
 }
 
 function closeLevelMenu() {
+    playClick();
     levelMenuOverlay.style.display = 'none';
 }
 
@@ -365,6 +361,7 @@ document.addEventListener('keydown', (e) => {
             penItem.style.display = 'none';
             ebutton5.style.display = 'none';
             inventoryItem5.innerHTML = '<img src="img/pen.avif" alt="pen" class="inv-item-img">';
+            playItemSound();
         } else if (ebutton6.style.display !== 'none') {
             advanceEngine();
         } else if (ebutton4.style.display !== 'none' && !circuitPlanOpen) {
@@ -423,7 +420,6 @@ hay.style.display= 'none';
 notePaper.style.display = 'none';
 
 
-// ---- LocalStorage Spielstand ----
 const SAVE_KEY = 'wollysWayHome_save';
 
 let collectedCheckpoints = { cp1: false, cp2: false, cp3: false };
@@ -458,13 +454,11 @@ function saveGame(screen) {
 function restoreCheckpointsAndInventory(data) {
     if (data.flags) levelFlags = { ...levelFlags, ...data.flags };
 
-    // Schaltplan-Zustand wiederherstellen
     if (data.workPlanDrawn) {
         workPlanDrawn = true;
         circuitPlanImg.src = 'img/Circuit-diagram2.png';
     }
 
-    // Aggregat-Fortschritt wiederherstellen
     if (data.engine) {
         engineTanked = !!data.engine.engineTanked;
         engineRepaired = !!data.engine.engineRepaired;
@@ -485,11 +479,9 @@ function restoreCheckpointsAndInventory(data) {
                        inventoryItem7, inventoryItem8, inventoryItem9];
         data.inventory.forEach((html, i) => { items[i].innerHTML = html; });
 
-        // Schlüssel ausblenden wenn bereits eingesammelt
         const keyCollected = data.inventory.some(html => html.includes('key.png'));
         if (keyCollected && keyItem) keyItem.style.display = 'none';
 
-        // Öl-Item ausblenden wenn bereits eingesammelt
         const oilCollected = data.inventory.some(html => html.includes('oil.png'));
         if (oilCollected && oilItem) oilItem.style.display = 'none';
     }
@@ -505,10 +497,17 @@ function loadSave() {
     let data;
     try { data = JSON.parse(raw); } catch { return; }
 
+    playClick();
     startSection.style.display = 'none';
     homeButton.style.display = '';
 
     if (data.flags) levelFlags = { ...levelFlags, ...data.flags };
+
+    if (data.screen === 'video') {
+        stopBgMusic();
+    } else {
+        startBgMusic();
+    }
 
     switch (data.screen) {
         case 'video':
@@ -556,7 +555,6 @@ function loadSave() {
             player.style.display = '';
             inventoryBeam.style.display = '';
             restoreCheckpointsAndInventory(data);
-            // Item nur respawnen, wenn weder im Inventar noch bereits verbraucht
             if ((!data.inventory || !data.inventory.some(h => h.includes('wrench'))) && !engineRepaired) wrenchItem.style.display = '';
             if ((!data.inventory || !data.inventory.some(h => h.includes('gasoline'))) && !engineTanked) gasolineItem.style.display = '';
             if ((!data.inventory || !data.inventory.some(h => h.includes('pen'))) && !workPlanDrawn) penItem.style.display = '';
@@ -590,6 +588,7 @@ function checkForSave() {
 }
 
 function backToHome() {
+    playClick();
     if (!confirm('Really return to the start? Your save will be deleted.')) return;
     deleteSave();
     startSection.style.display = '';
@@ -608,18 +607,17 @@ function backToHome() {
 }
 
 function startToVid() {
+    playClick();
+    stopBgMusic();
     startSection.style.display = 'none';
     videoSection.style.display = '';
     video.play();
     saveGame('video');
-//    video.play().then(() => {
-//        setTimeout(() => {
-//            vidToCon();
-//        }, 27000);
-//   });
 }
 
 function vidToCon() {
+    playClick();
+    startBgMusic();
     videoSection.style.display = 'none';
     conWithChick1.style.display = '';
     homeButton.style.display = '';
@@ -627,21 +625,26 @@ function vidToCon() {
 }
 
 function Con1ToCon2() {
+    playClick();
     conWithChick1.style.display = 'none';
     conWithChick2.style.display = '';
     saveGame('con2');
 }
 function Con2ToCon3() {
+    playClick();
     conWithChick2.style.display = 'none';
     conWithChick3.style.display = '';
     saveGame('con3');
 }
 function Con3ToCon4() {
+    playClick();
     conWithChick3.style.display = 'none';
     conWithChick4.style.display = '';
     saveGame('con4');
 }
 function Con4ToGame1() {
+    playClick();
+    startBgMusic();
     hay.style.display = '';
     notePaper.style.display = '';
     conWithChick4.style.display = 'none';
@@ -653,6 +656,7 @@ function Con4ToGame1() {
 }
 
 function Lock1ToGame1() {
+    playClick();
     lockScreen1.style.display = 'none';
     game1.style.display = '';
     player.style.display = '';
@@ -671,6 +675,8 @@ function clearInventory() {
         .forEach(item => item.innerHTML = '');
 }
 
+
+video.addEventListener('play', stopBgMusic);
 
 const CORRECT_PASSWORD = '724';
 const passwordInput1 = document.getElementById('password-input1');
@@ -771,7 +777,3 @@ function Game2ToGame3() {
 }
 
 checkForSave();
-
-
-
-

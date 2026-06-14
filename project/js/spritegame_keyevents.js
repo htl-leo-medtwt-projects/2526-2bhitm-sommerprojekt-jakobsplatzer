@@ -1,7 +1,3 @@
-
-/***********************************
- * EVENT EVENTS
- ***********************************/
 let KEY_EVENTS = {
     leftArrow: false,
     rightArrow: false,
@@ -49,5 +45,3 @@ function keyListenerUp(e) {
         KEY_EVENTS.downArrow = false;
     }
 }
-
-
