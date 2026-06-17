@@ -2,7 +2,8 @@ const SOUND = {
     click: 'sounds/normal-click.mp3',
     item: 'sounds/item-einsammeln.mp3',
     fuse: 'sounds/sicherungen-sound.mp3',
-    garage: 'sounds/garage-door.mp3'
+    garage: 'sounds/garage-door.mp3',
+    generator: 'sounds/generator-start.mp3'
 };
 
 let bgMusic = new Audio('sounds/hintergrundmusik.mp3');
@@ -23,6 +24,7 @@ function playClick() { playSound(SOUND.click, 0.6); }
 function playItemSound() { playSound(SOUND.item, 0.8); }
 function playFuseSound() { playSound(SOUND.fuse, 0.8); }
 function playGarageSound() { playSound(SOUND.garage, 0.8); }
+function playGeneratorSound() { playSound(SOUND.generator, 0.8); }
 
 function startBgMusic() {
     if (bgMusic.paused) bgMusic.play().catch(() => {});

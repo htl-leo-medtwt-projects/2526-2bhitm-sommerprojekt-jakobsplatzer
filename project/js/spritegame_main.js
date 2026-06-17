@@ -256,6 +256,7 @@ function advanceEngine() {
         removeFromInventory('oil.png');
     } else if (engineTanked && engineRepaired && engineLubricated && !engineStarted) {
         engineStarted = true;
+        playGeneratorSound();
     } else {
         return;
     }
@@ -354,25 +355,34 @@ function closeLevelMenu() {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'e' || e.key === 'E') {
         if (inventoryOpen) {
+            playClick();
             closeInventory();
         } else if (ebutton3.style.display !== 'none') {
+            playClick();
             Game2ToGame3();
         } else if (ebutton5.style.display !== 'none') {
+            playClick();
             penItem.style.display = 'none';
             ebutton5.style.display = 'none';
             inventoryItem5.innerHTML = '<img src="img/pen.avif" alt="pen" class="inv-item-img">';
             playItemSound();
         } else if (ebutton6.style.display !== 'none') {
+            playClick();
             advanceEngine();
         } else if (ebutton4.style.display !== 'none' && !circuitPlanOpen) {
+            playClick();
             openCircuitPlan();
         } else if (ebutton7.style.display !== 'none' && !elevatorOpen) {
+            playClick();
             openElevator();
         } else if (ebutton2.style.display !== 'none' && !notePaper2Open) {
+            playClick();
             openNotePaper2();
         } else if (ebutton.style.display !== 'none' && !notePaperOpen) {
+            playClick();
             openNotePaper();
         } else if (!notePaperOpen && !notePaper2Open && !circuitPlanOpen && !controlCabinetOpen && !elevatorOpen && inGameScreen()) {
+            playClick();
             openInventory();
         }
     }
@@ -513,6 +523,10 @@ function loadSave() {
         case 'video':
             videoSection.style.display = '';
             homeButton.style.display = 'none';
+            video.currentTime = 0;
+            video.play();
+            clearTimeout(_vidTimer);
+            _vidTimer = setTimeout(vidToCon, 27000);
             break;
         case 'con1':
             conWithChick1.style.display = '';
@@ -606,17 +620,22 @@ function backToHome() {
     reset();
 }
 
+let _vidTimer = null;
+
 function startToVid() {
     playClick();
     stopBgMusic();
     startSection.style.display = 'none';
     videoSection.style.display = '';
+    video.currentTime = 0;
     video.play();
     saveGame('video');
+    clearTimeout(_vidTimer);
+    _vidTimer = setTimeout(vidToCon, 27000);
 }
 
 function vidToCon() {
-    playClick();
+    clearTimeout(_vidTimer);
     startBgMusic();
     videoSection.style.display = 'none';
     conWithChick1.style.display = '';
