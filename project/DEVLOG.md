@@ -96,6 +96,34 @@ project/
 - **Game-Screen 3:** `.cage-box3` mit `#cage3-box1–10` (%-basiert)
 - `isCollidingWithAnyCage()` wählt je nach aktivem Screen die passenden Boxen
 
+### 9b. Keller – begehbarer Bonus-Raum (nach dem Passwort)
+Eigener Screen `#cellar-screen`. Liegt im Ablauf zwischen Passwortschloss und game2.
+
+**Zugang/Ausgang (Stand: Keller nach Passwort):**
+- **Gehege-Flucht:** In game1 macht der Heuhaufen (alle 3 Checkpoints) nur noch frei – Teleport nach `600/600` (kein Keller mehr am Heuhaufen).
+- Von dort zur Tür (`transition1`) → `Game1ToLock1()` → Schloss.
+- **Richtiges Passwort `724`** ruft `enterCellar()` auf (statt direkt game2). Blendet game1/Schloss aus, zeigt den Keller, spawnt Wolly mittig-unten (`0.50 / 0.72`).
+- `exitCellar()` (nach gelöstem Rätsel, durch die Eisentür) führt jetzt in **game2**: `clearInventory()`, Schlüssel-Item sichtbar, `reachedG2 = true`, Spawn `0.70 / 0.70`, `saveGame('game2')`.
+
+**Ablauf / Aufgaben:**
+1. **Dunkelheit** (`#cellar-dark`, radialer Lichtkreis) – beim Betreten dunkel.
+2. **Streichhölzer** (`#matches-item`) mit `[E]` einsammeln (`collectMatches`, landen in Slot 4) → `cellarHasMatches`.
+3. **Laterne** (`#lantern-item`) mit `[E]` anzünden (nur mit Streichhölzern) → `lightLantern()` blendet Dunkelheit aus, leert Slot 4 (`cellarLit`).
+4. **Notizzettel** (`#cellar-note`, `[E]` → Overlay) gibt den Hinweis: nur die äußeren Ventile öffnen.
+5. **Ventil-Rätsel**: 3 unsichtbare Hotspots (`.cellar-valve`) über den gezeichneten Rädern. Wolly läuft ans Rad → geteilter Button `#e-button-valve` zeigt das nächste Rad mit Farbe an: „[E] - Rotes/Blaues/Grünes Rad auf-/zudrehen" (Text spiegelt den Zustand). `[E]` → `toggleValve(nearValve)`. Lösung `VALVE_SOLUTION = [true,false,true]` (rotes + grünes offen, blaues zu). Korrekt → `cellarSolved`, **Schlüssel** (`#cellar-key`, `key2.png`) erscheint. Nur drehbar wenn `cellarLit`.
+6. **Schlüssel** einsammeln → `cellarHasKey`. **Ausgang** = Eisentür rechts (`#cellar-exit`) mit `[E]` → `exitCellar()`.
+
+> `cellarDone` wird beim Verlassen gesetzt und mitgespeichert, gated aber nichts mehr (der Heuhaufen löst keinen Keller mehr aus).
+
+**Assets:** Hintergrund `img/keller-background.png` (top-down, enthält Treppe, 3 Ventilräder, hängende Laterne, Eisentür). Items: `laterne.jpg` (JPG, weißer Hintergrund → `mix-blend-mode: multiply`), `streichholz.png` (transparent), `key2.png` (transparent).
+
+**Wichtig (Stolperfallen):**
+- `#cellar-screen` hat im CSS `display:none`. Zum Einblenden daher `style.display = 'block'` (nicht `''`, das würde auf `none` zurückfallen).
+- `#player` z-index auf 5 angehoben, damit Wolly über dem Dunkelheit-Overlay (z 4), aber unter den Vollbild-Overlays (z 9999) liegt.
+- Interaktive Elemente (Ventile/Eisentür) liegen als unsichtbare Hotspots exakt über den gezeichneten Hintergrund-Features; Zustand wird per Glow angezeigt (Ringe/Tür-Glühen), da das Hintergrundbild selbst statisch ist.
+
+**Save:** Objekt `cellar: { hasMatches, lit, solved, hasKey, done, valves }`; Screen-Key `'cellar'` in `saveGame`/`loadSave`; Wiederherstellung in `restoreCellar()` (aus `restoreCheckpointsAndInventory` heraus).
+
 ### 10. Multiple-Loop-Bug Fix
 - `let _loopId = 0` in loop.js
 - Jeder neue `gameLoop(id)` Aufruf prüft `if (id !== _loopId) return`
@@ -105,6 +133,14 @@ project/
 - `position: absolute; top: -3.5rem` (absichtlich halb versteckt)
 - Hover: `top: -3rem`
 - Klick → Bestätigungsdialog → Save löschen → `location.reload()`
+
+### 12. Endscreen (game4) – Kino-Abspann
+- Reiner CSS-Effekt, kein JS. Startet automatisch, sobald `#game-screen4` sichtbar wird.
+- `#credits-roll` läuft per `@keyframes creditsRoll` von `translateY(100vh)` nach `translateY(-100%)` (26s linear, einmalig).
+- `#credits-viewport` legt eine Abdunklung (`rgba(0,0,0,0.7)`) über die Herde, damit der Text lesbar ist; am Ende fadet sie via `@keyframes creditsDim` (Start 25.5s) auf transparent → die helle Herde (Happy End) wird wieder freigegeben.
+- Texte nutzen den roten Titel-Look (Titel) bzw. cremefarbene/goldene Klassen (`.credits-role`, `.credits-name`).
+- `#restart-button` sitzt fix unten rechts (z-index 10), liegt damit außerhalb der zentrierten Abspann-Spalte und bleibt jederzeit klickbar.
+- Inhalte (Namen/Rollen) sind im HTML leicht editierbar.
 
 ---
 
@@ -145,6 +181,7 @@ ESC gedrückt:
 - [ ] `inv-cell` Debug-Border ggf. noch aktiv
 - [ ] Level 3 (game-screen3): `levelFlags.reachedG3` existiert, Puzzle noch nicht implementiert
 - [ ] `Game2ToGame3()` setzt Spieler auf `50% / 70%` — ggf. anpassen
+- [x] Endscreen (game4): Kino-Abspann umgesetzt (CSS-Credits-Roll + Abdunklung mit Fade-out)
 
 ---
 

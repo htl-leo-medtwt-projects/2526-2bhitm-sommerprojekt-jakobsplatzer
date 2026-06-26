@@ -80,7 +80,6 @@ let notePaper2Overlay = document.getElementById('note-paper2-overlay');
 let keyItem = document.getElementById('key-item');
 let oilItem = document.getElementById('oil-item');
 let transition2 = document.getElementById('transition-box2');
-let transition3 = document.getElementById('transition-box3');
 let wrenchItem = document.getElementById('wrench-item');
 let gasolineItem = document.getElementById('gasoline-item');
 let penItem = document.getElementById('pen-item');
@@ -119,6 +118,157 @@ let controlCabinetOpen = false;
 let elevatorOpen = false;
 let inventoryOpen = false;
 let isGameRunning = false;
+
+/* ===== Keller (Bonus-Raum in Level 1) ===== */
+let cellarScreen = document.getElementById('cellar-screen');
+let cellarDark = document.getElementById('cellar-dark');
+let lanternItem = document.getElementById('lantern-item');
+let matchesItem = document.getElementById('matches-item');
+let cellarNote = document.getElementById('cellar-note');
+let cellarExit = document.getElementById('cellar-exit');
+let cellarKey = document.getElementById('cellar-key');
+let cellarBox1 = document.getElementById('cellarBox1');
+let cellarBox2 = document.getElementById('cellarBox2');
+let cellarBox3 = document.getElementById('cellarBox3');
+let cellarBox4 = document.getElementById('cellarBox4');
+let ebuttonLantern = document.getElementById('e-button-lantern');
+let ebuttonCellarNote = document.getElementById('e-button-cellar-note');
+let ebuttonCellarExit = document.getElementById('e-button-cellar-exit');
+let ebuttonMatches = document.getElementById('e-button-matches');
+let ebuttonValve = document.getElementById('e-button-valve');
+let cellarNoteOverlay = document.getElementById('cellar-note-overlay');
+let valveEls = [
+    document.getElementById('valve1'),
+    document.getElementById('valve2'),
+    document.getElementById('valve3')
+];
+const VALVE_COLORS = ['Rotes', 'Blaues', 'Grünes'];
+let nearValve = -1;
+const VALVE_SOLUTION = [true, false, true];
+let valveState = [false, false, false];
+let cellarHasMatches = false;
+let cellarLit = false;
+let cellarSolved = false;
+let cellarHasKey = false;
+let cellarDone = false;
+let cellarNoteOpen = false;
+
+function applyCellarState() {
+    cellarDark.style.display = cellarLit ? 'none' : 'block';
+    lanternItem.classList.toggle('lit', cellarLit);
+    matchesItem.style.display = cellarHasMatches ? 'none' : '';
+    valveEls.forEach((v, i) => v.classList.toggle('open', valveState[i]));
+    // Schlüssel liegt erst nach gelöstem Rätsel bereit, bis er eingesammelt ist
+    cellarKey.style.display = (cellarSolved && !cellarHasKey) ? 'block' : 'none';
+    // Eisentür leuchtet erst, wenn der Schlüssel da ist
+    cellarExit.classList.toggle('ready', cellarHasKey);
+    ebuttonLantern.style.display = 'none';
+    ebuttonCellarNote.style.display = 'none';
+    ebuttonCellarExit.style.display = 'none';
+    ebuttonMatches.style.display = 'none';
+    ebuttonValve.style.display = 'none';
+}
+
+function enterCellar() {
+    isGameRunning = false;
+    lockScreen1.style.display = 'none';
+    game1.style.display = 'none';
+    cellarScreen.style.display = 'block';
+    player.style.display = '';
+    inventoryBeam.style.display = '';
+    applyCellarState();
+    PLAYER.box.style.left = Math.round(window.innerWidth * 0.50) + 'px';
+    PLAYER.box.style.top = Math.round(window.innerHeight * 0.72) + 'px';
+    PLAYER.box.style.opacity = '1';
+    PLAYER.spriteImg.style.right = '0px';
+    isGameRunning = true;
+    saveGame('cellar');
+    _loopId++; gameLoop(_loopId);
+}
+
+function exitCellar() {
+    isGameRunning = false;
+    cellarDone = true;
+    cellarScreen.style.display = 'none';
+    game2.style.display = '';
+    player.style.display = '';
+    inventoryBeam.style.display = '';
+    ebuttonCellarExit.style.display = 'none';
+    clearInventory();
+    keyItem.style.display = '';
+    levelFlags.reachedG2 = true;
+    PLAYER.box.style.left = Math.round(window.innerWidth * 0.70) + 'px';
+    PLAYER.box.style.top = Math.round(window.innerHeight * 0.70) + 'px';
+    PLAYER.box.style.opacity = '1';
+    PLAYER.spriteImg.style.right = '0px';
+    isGameRunning = true;
+    saveGame('game2');
+    _loopId++; gameLoop(_loopId);
+}
+
+function collectMatches() {
+    cellarHasMatches = true;
+    matchesItem.style.display = 'none';
+    ebuttonMatches.style.display = 'none';
+    inventoryItem4.innerHTML = '<img src="img/streichholz.png" alt="matches" class="inv-item-img">';
+    playItemSound();
+    saveGame('cellar');
+}
+
+function lightLantern() {
+    if (!cellarHasMatches || cellarLit) return;
+    cellarLit = true;
+    lanternItem.classList.add('lit');
+    cellarDark.style.display = 'none';
+    ebuttonLantern.style.display = 'none';
+    inventoryItem4.innerHTML = '';
+    playItemSound();
+    saveGame('cellar');
+}
+
+function toggleValve(i) {
+    if (!cellarLit) return;          // im Dunkeln nicht lösbar
+    playFuseSound();
+    valveState[i] = !valveState[i];
+    valveEls[i].classList.toggle('open', valveState[i]);
+    checkValves();
+    saveGame('cellar');
+}
+
+function checkValves() {
+    if (cellarSolved) return;
+    const correct = valveState.every((s, i) => s === VALVE_SOLUTION[i]);
+    if (correct) {
+        cellarSolved = true;
+        cellarKey.style.display = 'block';   // Schlüssel erscheint
+        playGarageSound();
+    }
+}
+
+function openCellarNote() {
+    cellarNoteOpen = true;
+    isGameRunning = false;
+    cellarNoteOverlay.style.display = 'flex';
+}
+
+function closeCellarNote() {
+    cellarNoteOpen = false;
+    isGameRunning = true;
+    cellarNoteOverlay.style.display = 'none';
+    _loopId++; gameLoop(_loopId);
+}
+
+function restoreCellar(data) {
+    if (!data.cellar) return;
+    const c = data.cellar;
+    cellarHasMatches = !!c.hasMatches;
+    cellarLit = !!c.lit;
+    cellarSolved = !!c.solved;
+    cellarHasKey = !!c.hasKey;
+    cellarDone = !!c.done;
+    if (Array.isArray(c.valves)) valveState = c.valves.slice(0, 3);
+    applyCellarState();
+}
 
 function openNotePaper() {
     notePaperOpen = true;
@@ -302,7 +452,8 @@ function closeInventory() {
 }
 
 function inGameScreen() {
-    return game1.style.display !== 'none' || game2.style.display !== 'none' || game3.style.display !== 'none';
+    return game1.style.display !== 'none' || game2.style.display !== 'none' ||
+           game3.style.display !== 'none' || cellarScreen.style.display !== 'none';
 }
 
 let levelMenuOverlay = document.getElementById('level-menu-overlay');
@@ -357,6 +508,20 @@ document.addEventListener('keydown', (e) => {
         if (inventoryOpen) {
             playClick();
             closeInventory();
+        } else if (ebuttonCellarExit.style.display !== 'none') {
+            playClick();
+            exitCellar();
+        } else if (ebuttonMatches.style.display !== 'none') {
+            playClick();
+            collectMatches();
+        } else if (ebuttonLantern.style.display !== 'none') {
+            playClick();
+            lightLantern();
+        } else if (ebuttonValve.style.display !== 'none' && nearValve !== -1) {
+            toggleValve(nearValve);
+        } else if (ebuttonCellarNote.style.display !== 'none' && !cellarNoteOpen) {
+            playClick();
+            openCellarNote();
         } else if (ebutton3.style.display !== 'none') {
             playClick();
             Game2ToGame3();
@@ -381,7 +546,7 @@ document.addEventListener('keydown', (e) => {
         } else if (ebutton.style.display !== 'none' && !notePaperOpen) {
             playClick();
             openNotePaper();
-        } else if (!notePaperOpen && !notePaper2Open && !circuitPlanOpen && !controlCabinetOpen && !elevatorOpen && inGameScreen()) {
+        } else if (!notePaperOpen && !notePaper2Open && !circuitPlanOpen && !controlCabinetOpen && !elevatorOpen && !cellarNoteOpen && inGameScreen()) {
             playClick();
             openInventory();
         }
@@ -395,6 +560,7 @@ document.addEventListener('keydown', (e) => {
     }
     if (e.key === 'Escape') {
         if (levelMenuOverlay.style.display === 'flex') { closeLevelMenu(); return; }
+        if (cellarNoteOpen) { closeCellarNote(); return; }
         if (elevatorOpen) { closeElevator(); return; }
         if (controlCabinetOpen) { closeControlCabinet(); return; }
         if (circuitPlanOpen) { closeCircuitPlan(); return; }
@@ -415,6 +581,7 @@ game1.style.display = 'none';
 game2.style.display = 'none';
 game3.style.display = 'none';
 game4.style.display = 'none';
+cellarScreen.style.display = 'none';
 player.style.display = 'none';
 wrenchItem.style.display = 'none';
 gasolineItem.style.display = 'none';
@@ -442,6 +609,14 @@ function saveGame(screen) {
         flags: { ...levelFlags },
         workPlanDrawn,
         engine: { engineTanked, engineRepaired, engineLubricated, engineStarted },
+        cellar: {
+            hasMatches: cellarHasMatches,
+            lit: cellarLit,
+            solved: cellarSolved,
+            hasKey: cellarHasKey,
+            done: cellarDone,
+            valves: valveState.slice()
+        },
         inventory: [
             inventoryItem1.innerHTML,
             inventoryItem2.innerHTML,
@@ -454,7 +629,7 @@ function saveGame(screen) {
             inventoryItem9.innerHTML,
         ]
     };
-    if (screen === 'game1' || screen === 'game2') {
+    if (screen === 'game1' || screen === 'game2' || screen === 'cellar') {
         data.playerX = PLAYER.box.style.left;
         data.playerY = PLAYER.box.style.top;
     }
@@ -476,6 +651,8 @@ function restoreCheckpointsAndInventory(data) {
         engineStarted = !!data.engine.engineStarted;
     }
 
+    restoreCellar(data);
+
     if (!data.checkpoints) return;
     collectedCheckpoints = { ...data.checkpoints };
 
@@ -494,6 +671,11 @@ function restoreCheckpointsAndInventory(data) {
 
         const oilCollected = data.inventory.some(html => html.includes('oil.png'));
         if (oilCollected && oilItem) oilItem.style.display = 'none';
+
+        const matchesInInv = data.inventory.some(html => html.includes('streichholz'));
+        if (cellarHasMatches && !cellarLit && !matchesInInv) {
+            inventoryItem4.innerHTML = '<img src="img/streichholz.png" alt="matches" class="inv-item-img">';
+        }
     }
 }
 
@@ -556,6 +738,14 @@ function loadSave() {
             player.style.display = 'none';
             inventoryBeam.style.display = '';
             restoreCheckpointsAndInventory(data);
+            break;
+        case 'cellar':
+            cellarScreen.style.display = 'block';
+            player.style.display = '';
+            inventoryBeam.style.display = '';
+            restoreCheckpointsAndInventory(data);
+            applyCellarState();
+            startGame(data.playerX, data.playerY);
             break;
         case 'game2':
             game2.style.display = '';
@@ -705,17 +895,8 @@ passwordInput1.addEventListener('keydown', (e) => {
     if (passwordInput1.value === CORRECT_PASSWORD) {
         passwordInput1.value = '';
         lockScreen1.style.display = 'none';
-        game1.style.display = 'none';
-        game2.style.display = '';
-        player.style.display = '';
-        PLAYER.box.style.left = Math.round(window.innerWidth * 0.70) + 'px';
-        PLAYER.box.style.top = Math.round(window.innerHeight * 0.70) + 'px';
-        clearInventory();
-        keyItem.style.display = '';
-        levelFlags.reachedG2 = true;
-        isGameRunning = true;
-        saveGame('game2');
-        _loopId++; gameLoop(_loopId);
+        // Richtiges Passwort öffnet den Weg in den Keller (danach erst game2)
+        enterCellar();
     } else {
         passwordInput1.style.borderColor = '#B41A34';
         passwordInput1.style.boxShadow = '0 4px 18px rgba(180,26,52,0.6)';
@@ -738,6 +919,7 @@ function Game1ToLock1(){
 }
 
 function currentGameScreen() {
+    if (cellarScreen.style.display !== 'none') return 'cellar';
     if (game3.style.display !== 'none') return 'game3';
     if (game2.style.display !== 'none') return 'game2';
     return 'game1';

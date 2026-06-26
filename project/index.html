@@ -242,6 +242,61 @@
         </div>
     </div>
 
+    <!-- ===== Keller: begehbarer Bonus-Raum in Level 1 (erreichbar unter dem Heuhaufen) ===== -->
+    <div id="cellar-screen">
+
+        <!-- Wände (Kollisionsrahmen) -->
+        <div id="cellarBox1" class="cage-box-cellar"></div>
+        <div id="cellarBox2" class="cage-box-cellar"></div>
+        <div id="cellarBox3" class="cage-box-cellar"></div>
+        <div id="cellarBox4" class="cage-box-cellar"></div>
+
+        <!-- Laterne (mit Streichhölzern anzündbar) -->
+        <div id="lantern-item"><img src="img/laterne.png" alt="lantern"></div>
+        <div id="e-button-lantern">
+            <p>[E] - Light lantern</p>
+        </div>
+
+        <!-- Streichhölzer (einsammeln) -->
+        <div id="matches-item"><img src="img/streichholz.png" alt="matches"></div>
+        <div id="e-button-matches">
+            <p>[E] - Pick up matches</p>
+        </div>
+
+        <!-- Notizzettel mit dem Hinweis zum Ventil-Rätsel -->
+        <div id="cellar-note">
+            <img src="img/note-paper.png" alt="cellar-note">
+        </div>
+        <div id="e-button-cellar-note">
+            <p>[E] - Open</p>
+        </div>
+
+        <!-- Drei Ventile (Rätsel) – unsichtbare Hotspots über den gezeichneten Rädern; per [E] drehen -->
+        <div id="valve1" class="cellar-valve"></div>
+        <div id="valve2" class="cellar-valve"></div>
+        <div id="valve3" class="cellar-valve"></div>
+        <div id="e-button-valve">
+            <p>[E] - Rad drehen</p>
+        </div>
+
+        <!-- Schlüssel (erscheint nach gelöstem Rätsel) -->
+        <div id="cellar-key"><img src="img/key2.png" alt="key"></div>
+
+        <!-- Ausgang (Eisentür, mit Schlüssel aufsperrbar) -->
+        <div id="cellar-exit"></div>
+        <div id="e-button-cellar-exit">
+            <p>[E] - Unlock door</p>
+        </div>
+
+        <!-- Dunkelheit-Overlay -->
+        <div id="cellar-dark"></div>
+    </div>
+
+    <div id="cellar-note-overlay">
+        <img id="cellar-note-img" src="img/note-paper3.png" alt="note">
+        <p id="cellar-note-close">ESC</p>
+    </div>
+
     <div id="note-paper2-overlay">
         <img src="img/note-paper2.png" alt="note-paper2-large">
         <p id="note-paper2-close">ESC</p>
@@ -369,7 +424,32 @@
     </div>
 
     <div id="game-screen4">
-        <h1 id="game4-text">Wolly ist wieder bei ihrer Herde</h1>
+        <!-- Kino-Abspann: läuft von unten nach oben durch -->
+        <div id="credits-viewport">
+            <div id="credits-roll">
+                <p class="credits-headline">Wolly ist wieder bei ihrer Herde</p>
+
+                <h1 class="credits-title">Wolly's Way Home</h1>
+
+                <p class="credits-role">Idee &amp; Konzept</p>
+                <p class="credits-name">Jakob Platzer</p>
+
+                <p class="credits-role">Programmierung</p>
+                <p class="credits-name">Jakob Platzer</p>
+
+                <p class="credits-role">Grafik &amp; Artwork</p>
+                <p class="credits-name">Jakob Platzer</p>
+
+                <p class="credits-role">Musik &amp; Sound</p>
+                <p class="credits-name">Jakob Platzer</p>
+
+                <p class="credits-role">Besonderer Dank</p>
+                <p class="credits-name">HTL Leonding<br>Medientechnik</p>
+
+                <p class="credits-end">Danke fürs Spielen!</p>
+            </div>
+        </div>
+
         <div id="restart-button" onclick="restartGame()">
             <p>Restart</p>
         </div>

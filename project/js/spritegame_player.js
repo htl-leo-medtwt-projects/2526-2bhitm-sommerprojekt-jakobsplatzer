@@ -68,7 +68,19 @@ function isCollidingWithCage3() {
     );
 }
 
+function isCollidingWithCageCellar() {
+    return (
+        isColliding(PLAYER.box, cellarBox1, 0) ||
+        isColliding(PLAYER.box, cellarBox2, 0) ||
+        isColliding(PLAYER.box, cellarBox3, 0) ||
+        isColliding(PLAYER.box, cellarBox4, 0)
+    );
+}
+
 function isCollidingWithAnyCage() {
+    if (cellarScreen.style.display !== 'none') {
+        return isCollidingWithCageCellar();
+    }
     if (game3.style.display !== 'none') {
         return isCollidingWithCage3();
     }
@@ -139,17 +151,66 @@ function movePlayer(dx, dy, direction) {
         playItemSound();
     }
 
-    if(checkCheckpoints()){
+    if (game1.style.display !== 'none' && checkCheckpoints()) {
         hay.style.zIndex = 1000;
-        if(isColliding(PLAYER.box, hay, -70)){
-            isGameRunning = false;
+        if (isColliding(PLAYER.box, hay, -70)) {
+            // Heuhaufen = Flucht aus dem Gehege (Keller kommt erst nach dem Passwort)
             PLAYER.box.style.left = '600px';
             PLAYER.box.style.top = '600px';
-            isGameRunning = true;
         }
     }
 
-    if (game2.style.display === 'none' && game3.style.display === 'none') {
+    // Interaktionen im Keller
+    if (cellarScreen.style.display !== 'none') {
+        if (!cellarHasMatches && matchesItem.style.display !== 'none' && isColliding(PLAYER.box, matchesItem, 30)) {
+            ebuttonMatches.style.display = 'block';
+        } else {
+            ebuttonMatches.style.display = 'none';
+        }
+
+        if (!cellarLit && cellarHasMatches && isColliding(PLAYER.box, lanternItem, 40)) {
+            ebuttonLantern.style.display = 'block';
+        } else {
+            ebuttonLantern.style.display = 'none';
+        }
+
+        if (isColliding(PLAYER.box, cellarNote, 30)) {
+            ebuttonCellarNote.style.display = 'block';
+        } else {
+            ebuttonCellarNote.style.display = 'none';
+        }
+
+        // Ventile per [E] drehen (nur bei Licht) – zeigt das nächste Rad mit Farbe an
+        nearValve = -1;
+        if (cellarLit && !cellarSolved) {
+            for (let i = 0; i < valveEls.length; i++) {
+                if (isColliding(PLAYER.box, valveEls[i], 25)) { nearValve = i; break; }
+            }
+        }
+        if (nearValve !== -1) {
+            const action = valveState[nearValve] ? 'zudrehen' : 'aufdrehen';
+            ebuttonValve.querySelector('p').textContent = '[E] - ' + VALVE_COLORS[nearValve] + ' Rad ' + action;
+            ebuttonValve.style.display = 'block';
+        } else {
+            ebuttonValve.style.display = 'none';
+        }
+
+        if (cellarSolved && !cellarHasKey && isColliding(PLAYER.box, cellarKey, 15)) {
+            cellarHasKey = true;
+            cellarKey.style.display = 'none';
+            cellarExit.classList.add('ready');
+            playItemSound();
+            saveGame('cellar');
+        }
+
+        if (cellarHasKey && isColliding(PLAYER.box, cellarExit, 20)) {
+            ebuttonCellarExit.style.display = 'block';
+        } else {
+            ebuttonCellarExit.style.display = 'none';
+        }
+    }
+
+    if (game2.style.display === 'none' && game3.style.display === 'none' && cellarScreen.style.display === 'none') {
         if (isColliding(PLAYER.box, notePaper, 20)) {
             ebutton.style.display = '';
         } else {
@@ -205,10 +266,6 @@ function movePlayer(dx, dy, direction) {
         }
 
         if (garageDoorOpen && isColliding(PLAYER.box, transition4, 10)) {
-            Game3ToGame4();
-        }
-
-        if (transition3 && isColliding(PLAYER.box, transition3, 10)) {
             Game3ToGame4();
         }
     }
